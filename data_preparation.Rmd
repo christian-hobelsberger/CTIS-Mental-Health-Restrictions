@@ -1,0 +1,132 @@
+---
+title: "Data Preparation"
+author: "Christian Hobelsberger"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(httr)
+library(jsonlite)
+library(data.table)
+library(CTIS)
+```
+
+## Import Corona data from Germany
+
+For this I use the CKAN Data API: <https://www.corona-daten-deutschland.de/api/1/util/snippet/api_info.html?resource_id=09536dc7-d81b-4c79-badc-b0c48a2f6385>
+Query code from: <https://www.r-bloggers.com/2019/06/getting-open-data-into-r-from-ckan/>
+```{r Import Corona data from Germany}
+# Import data on curfew in Germany
+
+url <- "https://www.corona-daten-deutschland.de/api/3/action/datastore_search_sql?sql=SELECT%20*%20from%20%2209536dc7-d81b-4c79-badc-b0c48a2f6385%22"
+page <- GET(url) # API request
+status_code(page) # # Check that the call is successful
+# [1] 200
+# This means it was successful
+# Status codes:
+# 1XX - Informational
+# 2XX - Success!
+# 3XX - Client Error (something’s not right on your end)
+# 4XX - Server Error (something’s not right on their end)
+# Download the JSON data and convert to an R list
+kr_massn_unterkat_m18_list <- fromJSON(url)
+# Extract the actual data from the list
+kr_massn_unterkat_m18 <- kr_massn_unterkat_m18_list$result$records
+glimpse(kr_massn_unterkat_m18, width = 50)
+
+col_order <- c("ags5", "kreis", "datum", "code_m18_010", "code_m18_010_1", "code_m18_010_2", "code_m18_010_3", 
+               "code_m18_010_4", "code_m18_010_5", "code_m18_020", "code_m18_020_1", "code_m18_020_2", "code_m18_020_3",
+               "code_m18_020_4", "code_m18_020_5", "code_m18_030", "code_m18_030_1", "code_m18_030_2", "code_m18_030_3",
+               "code_m18_030_4", "code_m18_030_5", "code_m18_040", "code_m18_040_1", "code_m18_040_2", "code_m18_040_3",
+               "code_m18_040_4", "code_m18_040_5")
+kr_massn_unterkat_m18 <- kr_massn_unterkat_m18[, col_order]
+kr_massn_unterkat_m18
+
+
+```
+
+## Skript to download microdata
+We are using the R Package CTIS to get access to the API Interface, more information on <https://github.com/CaroHaensch/CTIS>.
+
+```{r Skript to download microdata, echo=FALSE}
+
+
+
+setwd("data/microdata")
+date_vec <- seq(as.Date("2020-04-23"), as.Date("2022-06-25"), by = "day") # Second date is end date
+username <- readline(prompt = "Enter username for CTIS login: ")
+password <- readline(prompt = "Enter password for CTIS login: ")
+for (date_index in seq_len(length(date_vec))) {
+  CTIS::CTIS_microdata(username = username, password = password, date = as.character(date_vec[date_index]), type = "full")
+}
+
+# Combine microdata
+colum_name_vec = c("survey_region", "survey_version", "weight", "Finished", "RecordedDate", "module",
+                      "intro1", "intro2", "A1", "A2_2_1", "A2_2_2", "D1", "D2", "D4", "D5",
+                      "E3", "V11", "E4", "E8", "E2", "E5", "E7a", "D7a", "D10")
+colum_name_vec_shorted = c("survey_region", "survey_version", "weight", "Finished", "RecordedDate",
+                      "intro1", "intro2", "A1", "A2_2_1", "A2_2_2", "D1", "D2", "D4",
+                      "E3", "E4", "E2", "E5")
+# Create list of files
+csv_files <- list.files(pattern = "\\.csv$")
+
+CTIS_microdata_shorted <- data.frame()
+for (file in csv_files) {
+  CTIS_microdata_shorted <- bind_rows(CTIS_microdata_shorted, 
+            readr::read_csv(file = file, 
+                            col_names = TRUE, 
+                            col_select = colum_name_vec_shorted))
+}
+setwd("..")
+write_csv(x = CTIS_microdata_shorted, file = "protected_data/CTIS_microdata_shorted.csv")
+
+
+setwd("./microdata")
+csv_files <- list.files(pattern = "\\.csv$")
+CTIS_microdata <- data.frame()
+for (file in csv_files) {
+  print(file)
+  CTIS_microdata <- bind_rows(CTIS_microdata,
+            readr::read_csv(file = file,
+                            col_names = TRUE,
+                            col_select = any_of(colum_name_vec),
+                            col_types = cols(survey_version = "c")))
+}
+setwd("..")
+write_csv(x = CTIS_microdata, file = "protected_data/CTIS_microdata_complete.csv")
+```
+
+```{r Import region mapping file, echo=FALSE}
+# Import region mapping file
+CTIS_survey_country_region_map_table <- read_csv(file = "data/CTIS_survey_country_region_map_table.csv")
+
+# Filter table for Germany
+CTIS_survey_country_region_map_table <- CTIS_survey_country_region_map_table %>%
+  filter(country_agg == "Germany")
+
+# Regions in Germany
+regions <- as.vector(na.omit(unique(CTIS_survey_country_region_map_table$region_agg)))
+```
+
+```{r Skript to import macrodata, echo=FALSE}
+indicator_list = list("anxious_7d", "depressed_7d", "worried_become_ill", "finance", "food_security")
+data <- lapply(X = c(indicator_list, regions), 
+               FUN = function(x){
+                 CTIS_open_data_region(indicator = x, type = "daily", country = "Germany", region = "Bayern", daterange = "")
+                 })
+data <- as.data.frame(do.call(rbind, data))
+data_trimmed <- data[,c(1:5, 7)]
+data_aggregated <- dcast(data = data_trimmed, 
+                         formula = data.country+data.iso_code+data.gid_0+data.survey_date~data.indicator, 
+                         value.var = "data.pct")
+data_aggregated$data.country <- as.factor(data_aggregated$data.country)
+data_aggregated$data.iso_code <- as.factor(data_aggregated$data.iso_code)
+data_aggregated$data.gid_0 <- as.factor(data_aggregated$data.gid_0)
+data_aggregated$data.survey_date <- as.Date(x = data_aggregated$data.survey_date, "%Y%m%d")
+
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
