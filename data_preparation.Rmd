@@ -10,6 +10,7 @@ library(tidyverse)
 library(httr)
 library(jsonlite)
 library(data.table)
+devtools::install_github("CaroHaensch/CTIS")
 library(CTIS)
 ```
 
@@ -20,9 +21,10 @@ Query code from: <https://www.r-bloggers.com/2019/06/getting-open-data-into-r-fr
 ```{r Import Corona data from Germany}
 # Import data on curfew in Germany
 
-url <- "https://www.corona-daten-deutschland.de/api/3/action/datastore_search_sql?sql=SELECT%20*%20from%20%2209536dc7-d81b-4c79-badc-b0c48a2f6385%22"
-page <- GET(url) # API request
-status_code(page) # # Check that the call is successful
+## Measures index federal states per day ----------------------------------------------------
+url_fed_states <- "https://www.corona-daten-deutschland.de/api/3/action/datastore_search_sql?sql=SELECT%20*%20from%20%22dff8926f-3006-4260-bc71-06b86d521811%22%20"
+page_fed_states <- GET(url_fed_states) # API request
+status_code(page_fed_states) # # Check that the call is successful
 # [1] 200
 # This means it was successful
 # Status codes:
@@ -31,7 +33,30 @@ status_code(page) # # Check that the call is successful
 # 3XX - Client Error (something’s not right on your end)
 # 4XX - Server Error (something’s not right on their end)
 # Download the JSON data and convert to an R list
-kr_massn_unterkat_m18_list <- fromJSON(url)
+bl_massnahmen_index_tag_list <- fromJSON(url_fed_states)
+# Extract the actual data from the list
+bl_massnahmen_index_tag <- bl_massnahmen_index_tag_list$result$records
+glimpse(bl_massnahmen_index_tag, width = 50)
+
+col_order_fed_states <- c("ags2", "bundesland", "datum", "bl_mn_idx_t", "bl_mn_idx_t_m02a", "bl_mn_idx_t_m02b", 
+                          "bl_mn_idx_t_m03", "bl_mn_idx_t_m16")
+bl_massnahmen_index_tag <- bl_massnahmen_index_tag[, col_order_fed_states]
+
+saveRDS(object = bl_massnahmen_index_tag, file = "data/protected_data/bl_massnahmen_index_tag.RDS")
+
+## Measures subcategories counties ----------------------------------------------------------
+url_counties <- "https://www.corona-daten-deutschland.de/api/3/action/datastore_search_sql?sql=SELECT%20*%20from%20%2209536dc7-d81b-4c79-badc-b0c48a2f6385%22"
+page_counties <- GET(url_counties) # API request
+status_code(page_counties) # # Check that the call is successful
+# [1] 200
+# This means it was successful
+# Status codes:
+# 1XX - Informational
+# 2XX - Success!
+# 3XX - Client Error (something’s not right on your end)
+# 4XX - Server Error (something’s not right on their end)
+# Download the JSON data and convert to an R list
+kr_massn_unterkat_m18_list <- fromJSON(url_counties)
 # Extract the actual data from the list
 kr_massn_unterkat_m18 <- kr_massn_unterkat_m18_list$result$records
 glimpse(kr_massn_unterkat_m18, width = 50)
@@ -42,9 +67,8 @@ col_order <- c("ags5", "kreis", "datum", "code_m18_010", "code_m18_010_1", "code
                "code_m18_030_4", "code_m18_030_5", "code_m18_040", "code_m18_040_1", "code_m18_040_2", "code_m18_040_3",
                "code_m18_040_4", "code_m18_040_5")
 kr_massn_unterkat_m18 <- kr_massn_unterkat_m18[, col_order]
-kr_massn_unterkat_m18
 
-
+saveRDS(object = kr_massn_unterkat_m18, file = "data/protected_data/kr_massn_unterkat_m18.RDS")
 ```
 
 ## Skript to download microdata
