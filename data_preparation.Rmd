@@ -136,21 +136,44 @@ regions <- as.vector(na.omit(unique(CTIS_survey_country_region_map_table$region_
 
 ```{r Skript to import macrodata, echo=FALSE}
 indicator_list = list("anxious_7d", "depressed_7d", "worried_become_ill", "finance", "food_security")
-data <- lapply(X = c(indicator_list, regions), 
-               FUN = function(x){
-                 CTIS_open_data_region(indicator = x, type = "daily", country = "Germany", region = "Bayern", daterange = "")
-                 })
-data <- as.data.frame(do.call(rbind, data))
-data_trimmed <- data[,c(1:5, 7)]
-data_aggregated <- dcast(data = data_trimmed, 
-                         formula = data.country+data.iso_code+data.gid_0+data.survey_date~data.indicator, 
+macrodata_list <- list()
+for (region_counter in regions) {
+  data_tmp_reg <- lapply(X = c(indicator_list, regions), 
+                         FUN = function(x){
+                           CTIS_open_data_region(indicator = x, type = "daily", country = "Germany", 
+                                                 region = region_counter, daterange = "")
+                           })
+  macrodata_list <- append(macrodata_list, data_tmp_reg)
+}
+# data <- lapply(X = c(indicator_list, regions), 
+#                FUN = function(x){
+#                  CTIS_open_data_region(indicator = x, type = "daily", country = "Germany", region = "Bayern", daterange = "")
+#                  })
+data <- as.data.frame(do.call(rbind, macrodata_list))
+data_trimmed <- data[,c(1:9)]
+# avg. data.sample_size because of differences in the same day
+
+data_trimmed <- data_trimmed %>% 
+  group_by(data.region, data.survey_date) %>% 
+  mutate(average_sample_size = mean(data.sample_size)) %>% 
+  ungroup()
+
+# replace the original sample_size column with the averaged sample size
+data_trimmed$data.sample_size <- data_trimmed$average_sample_size
+
+# remove the average_sample_size column
+data_trimmed$average_sample_size <- NULL
+
+data_aggregated <- dcast(data = as.data.table(data_trimmed), 
+                         formula = data.country+data.region+data.iso_code+data.gid_0+data.gid_1+data.survey_date+data.sample_size~data.indicator, 
                          value.var = "data.pct")
 data_aggregated$data.country <- as.factor(data_aggregated$data.country)
+data_aggregated$data.region <- as.factor(data_aggregated$data.region)
 data_aggregated$data.iso_code <- as.factor(data_aggregated$data.iso_code)
 data_aggregated$data.gid_0 <- as.factor(data_aggregated$data.gid_0)
+data_aggregated$data.gid_1 <- as.factor(data_aggregated$data.gid_1)
 data_aggregated$data.survey_date <- as.Date(x = data_aggregated$data.survey_date, "%Y%m%d")
 
+saveRDS(object = data_aggregated, file = "data/protected_data/data_macrodata.RDS")
 ```
 
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
