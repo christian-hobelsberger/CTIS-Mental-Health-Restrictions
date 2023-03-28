@@ -11,8 +11,83 @@ library(tidyverse)
 
 ## Analysis of Corona data from Germany
 
-```{r cars}
+```{r Analysis of Corona data from Germany}
 bl_massnahmen_index_tag <- readRDS(file = "data/protected_data/bl_massnahmen_index_tag.RDS")
 
 unique(bl_massnahmen_index_tag$bundesland)
+
+# Plot: German restriction index over time by federal state 
+ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t, color = bundesland)) +
+  geom_line(alpha = .5)  +
+  labs(title = "German measures index over time by federal states",
+       x = "Date",
+       y = "Measures index federal states per day (in %)")
+ggsave(filename = "Plots/german_restrictions/measures_date.png", width = 12, height = 9)
+  
+
+# Plot: German restriction index over time for Bavaria 
+ggplot(data = filter(bl_massnahmen_index_tag, bundesland == "Bayern"), 
+       mapping = aes(x = datum, y = bl_mn_idx_t)) +
+  geom_line()  +
+  labs(title = "German measures index over time for Bavaria",
+       x = "Date",
+       y = "Measures index federal states per day (in %)")
+ggsave(filename = "Plots/german_restrictions/measures_date_bavaria.png", width = 12, height = 9)
 ```
+
+## Analysis of macrodata with restriction data
+
+```{r Analysis of macrodata with restriction data}
+macro_restr <- readRDS(file = "data/protected_data/macro_restr.RDS")
+
+# Plot: German restriction index vs. anxious_7d
+ggplot(data = macro_restr, mapping = aes(x = bl_mn_idx_t, y = anxious_7d)) +
+  geom_point(alpha = .1) +
+  labs(title = "German restriction index vs. anxious_7d",
+       x = "Measures index federal states per day (in %)",
+       y = "anxious_7d")
+ggsave(filename = "Plots/macro_restrictions/measures_anxious7d.png", width = 12, height = 9)
+
+# Plot: German restriction index vs. depressed_7d
+ggplot(data = macro_restr, mapping = aes(x = bl_mn_idx_t, y = depressed_7d)) +
+  geom_point(alpha = .1) +
+  labs(title = "German restriction index vs. depressed_7d",
+       x = "Measures index federal states per day (in %)",
+       y = "depressed_7d")
+ggsave(filename = "Plots/macro_restrictions/measures_depressed_7d.png", width = 12, height = 9)
+
+# Plot: German restriction index vs. depressed_7d SMOOTHED
+ggplot(data = macro_restr, mapping = aes(x = bl_mn_idx_t, y = depressed_7d)) +
+  geom_point(alpha = .1) +
+  geom_smooth() +
+  labs(title = "German restriction index vs. depressed_7d",
+       x = "Measures index federal states per day (in %)",
+       y = "depressed_7d")
+ggsave(filename = "Plots/macro_restrictions/measures_depressed_7d_smoothed.png", width = 12, height = 9)
+
+# Plot: German restriction index vs. worried_become_ill
+ggplot(data = macro_restr, mapping = aes(x = bl_mn_idx_t, y = worried_become_ill)) +
+  geom_point(alpha = .1) +
+  labs(title = "German restriction index vs. worried_become_ill",
+       x = "Measures index federal states per day (in %)",
+       y = "worried_become_ill")
+ggsave(filename = "Plots/macro_restrictions/measures_worried_become_ill.png", width = 12, height = 9)
+
+# Plot: German restriction index vs. finance
+ggplot(data = macro_restr, mapping = aes(x = bl_mn_idx_t, y = finance)) +
+  geom_point(alpha = .1) +
+  labs(title = "German restriction index vs. finance",
+       x = "Measures index federal states per day (in %)",
+       y = "finance")
+ggsave(filename = "Plots/macro_restrictions/measures_finance.png", width = 12, height = 9)
+
+# Plot: German restriction index vs. food_security
+ggplot(data = macro_restr, mapping = aes(x = bl_mn_idx_t, y = food_security)) +
+  geom_point(alpha = .1) +
+  labs(title = "German restriction index vs. food_security",
+       x = "Measures index federal states per day (in %)",
+       y = "food_security")
+ggsave(filename = "Plots/macro_restrictions/food_security.png", width = 12, height = 9)
+
+```
+
