@@ -93,48 +93,34 @@ saveRDS(object = kr_massn_unterkat_m18, file = "data/protected_data/kr_massn_unt
 We are using the R Package CTIS to get access to the API Interface, more information on <https://github.com/CaroHaensch/CTIS>.
 
 ```{r Skript to download microdata, echo=FALSE}
-# setwd("data/microdata")
-# date_vec <- seq(as.Date("2020-04-23"), as.Date("2022-06-25"), by = "day") # Second date is end date
-# username <- readline(prompt = "Enter username for CTIS login: ")
-# password <- readline(prompt = "Enter password for CTIS login: ")
-# for (date_index in seq_len(length(date_vec))) {
-#   CTIS::CTIS_microdata(username = username, password = password, date = as.character(date_vec[date_index]), type = "full")
-# }
-# 
-# # Combine microdata
-# colum_name_vec = c("survey_region", "survey_version", "weight", "Finished", "RecordedDate", "module",
-#                       "intro1", "intro2", "A1", "A2_2_1", "A2_2_2", "D1", "D2", "D4", "D5",
-#                       "E3", "V11", "E4", "E8", "E2", "E5", "E7a", "D7a", "D10")
-# colum_name_vec_shorted = c("survey_region", "survey_version", "weight", "Finished", "RecordedDate",
-#                       "intro1", "intro2", "A1", "A2_2_1", "A2_2_2", "D1", "D2", "D4",
-#                       "E3", "E4", "E2", "E5")
-# # Create list of files
-# csv_files <- list.files(pattern = "\\.csv$")
-# 
-# CTIS_microdata_shorted <- data.frame()
-# for (file in csv_files) {
-#   CTIS_microdata_shorted <- bind_rows(CTIS_microdata_shorted, 
-#             readr::read_csv(file = file, 
-#                             col_names = TRUE, 
-#                             col_select = colum_name_vec_shorted))
-# }
-# setwd("..")
-# write_csv(x = CTIS_microdata_shorted, file = "protected_data/CTIS_microdata_shorted.csv")
-# 
-# 
-# setwd("./microdata")
-# csv_files <- list.files(pattern = "\\.csv$")
-# CTIS_microdata <- data.frame()
-# for (file in csv_files) {
-#   print(file)
-#   CTIS_microdata <- bind_rows(CTIS_microdata,
-#             readr::read_csv(file = file,
-#                             col_names = TRUE,
-#                             col_select = any_of(colum_name_vec),
-#                             col_types = cols(survey_version = "c")))
-# }
-# setwd("..")
-# write_csv(x = CTIS_microdata, file = "protected_data/CTIS_microdata_complete.csv")
+setwd("data/protected_data/microdata")
+date_vec <- seq(as.Date("2020-04-23"), as.Date("2022-06-25"), by = "day") # Second date is end date
+username <- readline(prompt = "Enter username for CTIS login: ")
+password <- readline(prompt = "Enter password for CTIS login: ")
+# Download microdata files
+for (date_index in seq_len(length(date_vec))) {
+  CTIS::CTIS_microdata(username = username, password = password, date = as.character(date_vec[date_index]), type = "full")
+}
+
+# Combine microdata
+colum_name_vec = c("survey_region", "survey_version", "weight", "Finished", "RecordedDate", "country_agg",
+                   "country_region_numeric", "region_agg", "intro1", "intro2", "B0", "G1", "D1", "D2",
+                   "D4", "D5", "J1", "E3", "E4", "E8", "E2", "E5", "E7a", "D7a", "D10")
+# Create list of files
+csv_files <- list.files(pattern = "\\.csv$")
+
+CTIS_microdata <- data.frame()
+for (file in csv_files) {
+  CTIS_microdata <- bind_rows(CTIS_microdata,
+            readr::read_csv(file = file,
+                            col_names = TRUE,
+                            col_select = any_of(colum_name_vec),
+                            col_types = c(.default = "d", survey_region = "f", country_agg = "f", 
+                                          region_agg = "f", RecordedDate = "f")) %>% 
+              filter(country_region_numeric %in% 1143:1159))
+}
+setwd("..")
+write_csv(x = CTIS_microdata, file = "CTIS_microdata.csv")
 ```
 
 ```{r Import region mapping file, echo=FALSE}
