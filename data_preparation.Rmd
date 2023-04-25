@@ -109,6 +109,7 @@ colum_name_vec = c("survey_region", "survey_version", "weight", "Finished", "Rec
 # Create list of files
 csv_files <- list.files(pattern = "\\.csv$")
 
+# Create dataframe with all dates and country "Germany" (see country_region_numeric %in% 1143:1159)
 CTIS_microdata <- data.frame()
 for (file in csv_files) {
   CTIS_microdata <- bind_rows(CTIS_microdata,
@@ -120,8 +121,136 @@ for (file in csv_files) {
               filter(country_region_numeric %in% 1143:1159))
 }
 setwd("..")
-write_csv(x = CTIS_microdata, file = "CTIS_microdata.csv")
+write_csv(x = CTIS_microdata, file = "CTIS_microdata_raw.csv")
+setwd("~/git/CTIS-Mental-Health-Restrictions")
 ```
+
+# Cleaning up microdata
+```{r}
+# Loading microdata raw
+CTIS_microdata_raw <- read_csv(file = "data/protected_data/CTIS_microdata_raw.csv", col_names = TRUE,
+                               col_types = c(.default = "f", weight = "d", RecordedDate = "T", 
+                                             J1 = "d", E5 = "d", E7a = "d"),
+                               na = c("NA", "-99", "-88", "-77"))
+
+# Removing wrong countries
+CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(country_agg == "Germany")
+CTIS_microdata_raw$country_agg <- droplevels(CTIS_microdata_raw$country_agg) # Drop other levels
+CTIS_microdata_raw$region_agg <- droplevels(CTIS_microdata_raw$region_agg) # Drop other levels
+
+# TODO: Possibly clean survey_region levels -> ROW
+
+# Adjust levels for data
+levels(CTIS_microdata_raw$D1) <- list(
+  "None of the time" = "5",
+  "A little of the time" = "4",
+  "Some of the time" = "3",
+  "Most of the time" = "2",
+  "All the time" = "1"
+)
+
+levels(CTIS_microdata_raw$D2) <- list(
+  "None of the time" = "5",
+  "A little of the time" = "4",
+  "Some of the time" = "3",
+  "Most of the time" = "2",
+  "All the time" = "1"
+)
+
+levels(CTIS_microdata_raw$D4) <- list(
+  "Not worried at all" = "4",
+  "Not too worried" = "3",
+  "Somewhat worried" = "2",
+  "Very worried" = "1"
+)
+
+levels(CTIS_microdata_raw$E3) <- list(
+  "Male" = "1",
+  "Female" = "2",
+  "Other" = "3",
+  "Prefer not to answer" = "4"
+)
+
+levels(CTIS_microdata_raw$E4) <- list(
+  "18-24" = "1",
+  "25-34" = "2",
+  "35-44" = "3",
+  "45-54" = "4",
+  "55-64" = "5",
+  "65-74" = "6",
+  "75+" = "7"
+)
+
+levels(CTIS_microdata_raw$E2) <- list(
+  "City" = "1",
+  "Town" = "2",
+  "Village or rural area" = "3"
+)
+
+levels(CTIS_microdata_raw$D5) <- list(
+  "Not worried at all" = "4",
+  "Not too worried" = "3",
+  "Somewhat worried" = "2",
+  "Very worried" = "1"
+)
+
+
+levels(CTIS_microdata_raw$D10) <- list(
+  "Agriculture" = "1",
+  "Buying and selling" = "2",
+  "Construction" = "3",
+  "Education" = "4",
+  "Electricity/water/gas/waste" = "5",
+  "Financial/insurance/real estate services" = "6",
+  "Health" = "7",
+  "Manufacturing" = "8",
+  "Mining" = "9",
+  "Personal services" = "10",
+  "Professional/scientific/technical activities" = "11",
+  "Public administration" = "12",
+  "Tourism" = "13",
+  "Transportation" = "14",
+  "Other" = "15"
+)
+
+levels(CTIS_microdata_raw$B0) <- list(
+  "Yes" = "1",
+  "No" = "2"
+)
+
+levels(CTIS_microdata_raw$G1) <- list(
+  "Not at all" = "4",
+  "A little" = "3",
+  "A moderate amount" = "2",
+  "A great deal" = "1"
+)
+
+levels(CTIS_microdata_raw$E8) <- list(
+  "No formal schooling" = "1",
+  "Less than primary school" = "2",
+  "Primary school completed" = "3",
+  "Secondary school complete" = "4",
+  "High school (or equivalent) completed" = "5",
+  "College/ pre-university/ University completed" = "6",
+  "University post-graduate degree completed" = "7"
+)
+
+levels(CTIS_microdata_raw$D7a) <- list(
+  "Yes" = "1",
+  "No" = "2"
+)
+
+# Filter dates until June 12, 2022 because of survey end
+CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(RecordedDate < as.Date("2022-06-26"))
+
+# Filter for sensible E5, J1, E7a
+CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(is.na(E5) | (E5 == as.integer(E5) & E5 <= 50))
+CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(is.na(J1) | (J1 == as.integer(J1) & J1 <= 7))
+CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(is.na(E7a) | (E7a == as.integer(E7a) & E7a <= 50))
+
+saveRDS(object = CTIS_microdata_raw, file = "data/protected_data/CTIS_microdata.RDS")
+```
+
 
 ```{r Import region mapping file, echo=FALSE}
 # Import region mapping file
