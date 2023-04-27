@@ -145,7 +145,7 @@ ggplot(data = CTIS_microdata, mapping = aes(x = region_agg)) +
   labs(title = "Observations region_agg (federal state)",
        x = "Number of Observations",
        y = "federal states")
-ggsave("Plots/microdata/Obs_region_agg.png", width = 12, height = 6)
+ggsave("Plots/microdata/Obs_region_agg_barplot.png", width = 12, height = 6)
 ```
 
 # Analysis of microdata with restriction data
@@ -159,5 +159,6 @@ ggplot(data = micro_restr, mapping = aes(x = D1, y = bl_mn_idx_t)) +
   labs(title = "D1 (anxious) vs. German restriction index",
        x = "Measures index federal states per day (in %)",
        y = "Measures index federal states per day (in %)")
+ggsave("Plots/microdata/D1_restr_boxplot.png", width = 12, height = 9)
 ```
 
