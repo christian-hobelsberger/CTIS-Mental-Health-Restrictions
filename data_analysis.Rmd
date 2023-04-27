@@ -7,6 +7,13 @@ output: html_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+install.packages("timetk")
+library(timetk)
+
+# Read tables from data_analysis_prep_tables.R
+table_Obs_D1_Date <- readRDS(file = "tables/analysis/table_Obs_D1_Date.RDS")
+table_NA_D1_Date <- readRDS(file = "tables/analysis/table_NA_D1_Date.RDS")
+table_Obs_region_agg_Date_weekly <- readRDS(file = "tables/analysis/table_Obs_region_agg_Date_weekly.RDS")
 ```
 
 ## Analysis of Corona data from Germany
@@ -38,6 +45,7 @@ ggsave(filename = "Plots/german_restrictions/measures_date_bavaria.png", width =
 ## Analysis of macrodata with restriction data
 
 ```{r Analysis of macrodata with restriction data}
+# Read macrodata with restriction data
 macro_restr <- readRDS(file = "data/protected_data/macro_restr.RDS")
 
 # Plot: German restriction index vs. anxious_7d
@@ -91,5 +99,65 @@ ggsave(filename = "Plots/macro_restrictions/food_security.png", width = 12, heig
 
 ```
 
+# Analysis of microdata
+```{r general analysis of microdata}
+# Read in microdata
+CTIS_microdata <- readRDS(file = "data/protected_data/CTIS_microdata.RDS")
 
+# Plots with table data: 
+
+## Plot Observations and NAs ----------------------------------------------------------------------------------
+
+# Plot: Observations D1 (anxious) over time
+ggplot(data = table_Obs_D1_Date, mapping = aes(x = RecordedDate, y = count)) +
+  geom_line() +
+  labs(title = "Observations D1 (anxious) over time",
+       x = "Date",
+       y = "Number of Observations - D1 (per day)")
+ggsave("Plots/microdata/Obs_RecordedDate_D1_lineplot.png", width = 12, height = 6)
+
+# Plot: NAs D1 (anxious) over time
+ggplot(data = table_NA_D1_Date, mapping = aes(x = RecordedDate, y = count_NA)) +
+  geom_line() +
+  labs(title = "NAs D1 (anxious) over time",
+       x = "Date",
+       y = "Number of NAs - D1 (per day)")
+ggsave("Plots/Chris/microdata/NAs_RecordedDate_D1_lineplot.png", width = 12, height = 6)
+
+# Plot: Weekly observations of region_agg (federal state) over time
+ggplot(data = table_Obs_region_agg_Date_weekly, mapping = aes(x = Date, y = count, color = region_agg)) +
+  geom_line() +
+  labs(title = "Weekly observations of region_agg (federal state) over time",
+       x = "Date",
+       y = "Number of weekly observations - region_agg (federal state)") +
+  guides(color=guide_legend(title="region_agg (federal state)"))
+ggsave("Plots/microdata/Obs_Date_region_agg_weekly_lineplot.png", width = 12, height = 6)
+
+
+
+
+# Plots without table data:
+
+# Plot: Observations region_agg (federal state)
+ggplot(data = CTIS_microdata, mapping = aes(x = region_agg)) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = "Observations region_agg (federal state)",
+       x = "Number of Observations",
+       y = "federal states")
+ggsave("Plots/microdata/Obs_region_agg.png", width = 12, height = 6)
+```
+
+# Analysis of microdata with restriction data
+```{r Analysis of microdata with restriction data}
+# Read microdata with restriction data
+micro_restr <- readRDS(file = "data/protected_data/micro_restr.RDS")
+
+# Plot: D1 vs German restriction index
+ggplot(data = micro_restr, mapping = aes(x = D1, y = bl_mn_idx_t)) +
+  geom_boxplot() +
+  labs(title = "D1 (anxious) vs. German restriction index",
+       x = "Measures index federal states per day (in %)",
+       y = "Measures index federal states per day (in %)")
+```
 

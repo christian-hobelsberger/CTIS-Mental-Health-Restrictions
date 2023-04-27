@@ -248,6 +248,13 @@ CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(is.na(E5) | (E5 == as.intege
 CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(is.na(J1) | (J1 == as.integer(J1) & J1 <= 7))
 CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(is.na(E7a) | (E7a == as.integer(E7a) & E7a <= 50))
 
+# Create Date column
+CTIS_microdata_raw$Date <- as.Date(CTIS_microdata_raw$RecordedDate)
+
+# set factor levels for region_agg
+CTIS_microdata_raw$region_agg <- 
+  factor(CTIS_microdata$region_agg,levels(CTIS_microdata$region_agg)[order(as.vector(levels(CTIS_microdata$region_agg)))])
+
 saveRDS(object = CTIS_microdata_raw, file = "data/protected_data/CTIS_microdata.RDS")
 ```
 
@@ -304,14 +311,14 @@ data_aggregated$data.gid_0 <- as.factor(data_aggregated$data.gid_0)
 data_aggregated$data.gid_1 <- as.factor(data_aggregated$data.gid_1)
 data_aggregated$data.survey_date <- as.Date(x = data_aggregated$data.survey_date, "%Y%m%d")
 
-saveRDS(object = data_aggregated, file = "data/protected_data/data_macrodata.RDS")
+saveRDS(object = data_aggregated, file = "data/protected_data/macrodata.RDS")
 ```
 
 ## Merge macrodata and german restriction data
 
 ```{r merge macro and restriction data}
 bl_massnahmen_index_tag <- readRDS(file = "data/protected_data/bl_massnahmen_index_tag.RDS")
-macrodata <- readRDS(file = "data/protected_data/data_macrodata.RDS")
+macrodata <- readRDS(file = "data/protected_data/macrodata.RDS")
 
 macro_restr <- merge(x=macrodata,y=bl_massnahmen_index_tag, by.x=c("data.region","data.survey_date"), 
                      by.y=c("bundesland","datum"), all.x = TRUE)
@@ -319,4 +326,14 @@ saveRDS(object = macro_restr, file = "data/protected_data/macro_restr.RDS")
 
 ```
 
+## Merge microdata and german restriction data
 
+```{r merge macro and restriction data}
+bl_massnahmen_index_tag <- readRDS(file = "data/protected_data/bl_massnahmen_index_tag.RDS")
+CTIS_microdata <- readRDS(file = "data/protected_data/CTIS_microdata.RDS")
+
+micro_restr <- merge(x=CTIS_microdata,y=bl_massnahmen_index_tag, by.x=c("region_agg","Date"), 
+                     by.y=c("bundesland","datum"), all.x = TRUE)
+saveRDS(object = micro_restr, file = "data/protected_data/micro_restr.RDS")
+
+```
