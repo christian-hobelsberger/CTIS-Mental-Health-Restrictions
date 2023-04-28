@@ -1,0 +1,62 @@
+---
+title: "Data Analysis"
+author: "Christian Hobelsberger"
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+install.packages("glmnet", "sjPlot")
+library(glmnet)
+library(sjPlot)
+```
+
+### Setup for modelling
+```{r include=FALSE}
+micro_restr <- readRDS("data/protected_data/micro_restr.RDS")
+micro_restr$anxious <- ifelse(micro_restr$D1 %in% levels(micro_restr$D1)[4:5], 
+                              TRUE,
+                              ifelse(is.na(micro_restr$D1), NA, FALSE))
+micro_restr$depressed <- ifelse(micro_restr$D2 %in% levels(micro_restr$D1)[4:5], 
+                                TRUE, 
+                                ifelse(is.na(micro_restr$D1), NA, FALSE))
+```
+
+# Microdata and restriction data logistic regression model
+```{r Full logistic regression}
+# Set reference categories
+micro_restr$E4 <- relevel(micro_restr$E4, ref = "45-54")
+micro_restr$E3 <- relevel(micro_restr$E3, ref = "Male")
+micro_restr$E8 <- relevel(micro_restr$E8, ref = "Secondary school complete")
+micro_restr$E2 <- relevel(micro_restr$E2, ref = "Town")
+micro_restr$D10 <- relevel(micro_restr$D10, ref = "Other")
+micro_restr$B0 <- relevel(micro_restr$B0, ref = "No")
+micro_restr$G1 <- relevel(micro_restr$G1, ref = "A little")
+micro_restr$D7a <- relevel(micro_restr$D7a, ref = "No")
+
+# Fit model
+
+# E4 = Age, E3 = Gender, E8 = Education, E2 = Where do you live?, E5 = Number people slept in same place
+# D10 = Field of business, B0 = Had Covid?, G1 = Worried catching Covid?, J1 = Number children in houshold
+# E7a = Number rooms used for sleeping, D7a = Paid work
+
+model_glm_restr <- glm(anxious ~ bl_mn_idx_t + bl_mn_idx_t_m02a + bl_mn_idx_t_m02b + bl_mn_idx_t_m03 + bl_mn_idx_t_m16 + 
+                   E4 + E3 + E8 + E2 + E5 + D10 + B0 + G1 + J1 + E7a + D7a,
+                 family=binomial(link='logit'), data=micro_restr)
+summary(model_glm_restr)
+sink("Plots/models/glm_restr.txt")
+print(summary(model_glm_restr))
+sink()
+exp(model_glm_restr$coefficients)
+
+# Forestplot
+plot_model(model_glm_restr)
+ggsave("Plots/models/model_glm_restr.png", width = 12, height = 9)
+
+all.models <- list()
+all.models[[1]] <- model_glm
+
+plot_models(all.models)
+ggsave("Plots/models/model_glm.png", width = 12, height = 9)
+```

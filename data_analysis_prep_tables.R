@@ -8,6 +8,8 @@ CTIS_microdata <- readRDS(file = "data/protected_data/CTIS_microdata.RDS")
 
 # Create and save tables
 
+# Obs and NAs -----------------------------------------------------------------------------
+
 table_Obs_D1_Date <- CTIS_microdata %>%
   select(RecordedDate, D1) %>%
   drop_na() %>%
@@ -23,6 +25,54 @@ table_NA_D1_Date <- CTIS_microdata %>%
                     .by = "day",
                     count_NA = n())
 saveRDS(object = table_NA_D1_Date, file = "tables/analysis/table_NA_D1_Date.RDS")
+
+table_Obs_D2_Date <- CTIS_microdata %>%
+  select(RecordedDate, D2) %>%
+  drop_na() %>%
+  summarise_by_time(.date_var = RecordedDate,
+                    .by = "day",
+                    count = n())
+saveRDS(object = table_Obs_D2_Date, file = "tables/analysis/table_Obs_D2_Date.RDS")
+
+table_NA_D2_Date <- CTIS_microdata %>%
+  select(RecordedDate, D2) %>%
+  filter(is.na(D2)) %>%
+  summarise_by_time(.date_var = RecordedDate,
+                    .by = "day",
+                    count_NA = n())
+saveRDS(object = table_NA_D2_Date, file = "tables/analysis/table_NA_D2_Date.RDS")
+
+table_Obs_D4_Date <- CTIS_microdata %>%
+  select(RecordedDate, D4) %>%
+  drop_na() %>%
+  summarise_by_time(.date_var = RecordedDate,
+                    .by = "day",
+                    count = n())
+saveRDS(object = table_Obs_D4_Date, file = "tables/analysis/table_Obs_D4_Date.RDS")
+
+table_NA_D4_Date <- CTIS_microdata %>%
+  select(RecordedDate, D4) %>%
+  filter(is.na(D4)) %>%
+  summarise_by_time(.date_var = RecordedDate,
+                    .by = "day",
+                    count_NA = n())
+saveRDS(object = table_NA_D4_Date, file = "tables/analysis/table_NA_D4_Date.RDS")
+
+table_Obs_D5_Date <- CTIS_microdata %>%
+  select(RecordedDate, D5) %>%
+  drop_na() %>%
+  summarise_by_time(.date_var = RecordedDate,
+                    .by = "day",
+                    count = n())
+saveRDS(object = table_Obs_D5_Date, file = "tables/analysis/table_Obs_D5_Date.RDS")
+
+table_NA_D5_Date <- CTIS_microdata %>%
+  select(RecordedDate, D5) %>%
+  filter(is.na(D5)) %>%
+  summarise_by_time(.date_var = RecordedDate,
+                    .by = "day",
+                    count_NA = n())
+saveRDS(object = table_NA_D5_Date, file = "tables/analysis/table_NA_D5_Date.RDS")
 
 # table_Obs_region_agg_Date <- CTIS_microdata %>%
 #   select(region_agg, Date) %>%

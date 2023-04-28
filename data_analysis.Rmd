@@ -7,12 +7,16 @@ output: html_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
-install.packages("timetk")
-library(timetk)
 
 # Read tables from data_analysis_prep_tables.R
 table_Obs_D1_Date <- readRDS(file = "tables/analysis/table_Obs_D1_Date.RDS")
 table_NA_D1_Date <- readRDS(file = "tables/analysis/table_NA_D1_Date.RDS")
+table_Obs_D2_Date <- readRDS(file = "tables/analysis/table_Obs_D2_Date.RDS")
+table_NA_D2_Date <- readRDS(file = "tables/analysis/table_NA_D2_Date.RDS")
+table_Obs_D4_Date <- readRDS(file = "tables/analysis/table_Obs_D4_Date.RDS")
+table_NA_D4_Date <- readRDS(file = "tables/analysis/table_NA_D4_Date.RDS")
+table_Obs_D5_Date <- readRDS(file = "tables/analysis/table_Obs_D5_Date.RDS")
+table_NA_D5_Date <- readRDS(file = "tables/analysis/table_NA_D5_Date.RDS")
 table_Obs_region_agg_Date_weekly <- readRDS(file = "tables/analysis/table_Obs_region_agg_Date_weekly.RDS")
 ```
 
@@ -40,6 +44,38 @@ ggplot(data = filter(bl_massnahmen_index_tag, bundesland == "Bayern"),
        x = "Date",
        y = "Measures index federal states per day (in %)")
 ggsave(filename = "Plots/german_restrictions/measures_date_bavaria.png", width = 12, height = 9)
+
+# Plot: German restriction index (Daycare centers) over time by federal state 
+ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t_m03, color = bundesland)) +
+  geom_line(alpha = .5)  +
+  labs(title = "German measures index (Daycare centers) over time by federal states",
+       x = "Date",
+       y = "Measures index (Daycare centers) federal states per day (in %)")
+ggsave(filename = "Plots/german_restrictions/measures_daycare_date.png", width = 12, height = 9)
+
+# Plot: German restriction index (Secondary schools) over time by federal state 
+ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t_m02a, color = bundesland)) +
+  geom_line(alpha = .5)  +
+  labs(title = "German measures index (Secondary schools) over time by federal states",
+       x = "Date",
+       y = "Measures index (Secondary schools) federal states per day (in %)")
+ggsave(filename = "Plots/german_restrictions/measures_sec_schools_date.png", width = 12, height = 9)
+
+# Plot: German restriction index (Elementary schools) over time by federal state 
+ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t_m02b, color = bundesland)) +
+  geom_line(alpha = .5)  +
+  labs(title = "German measures index (Elementary schools) over time by federal states",
+       x = "Date",
+       y = "Measures index (Elementary schools) federal states per day (in %)")
+ggsave(filename = "Plots/german_restrictions/measures_elem_schools_date.png", width = 12, height = 9)
+
+# Plot: German restriction index (Mask obligation) over time by federal state 
+ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t_m16, color = bundesland)) +
+  geom_line(alpha = .5)  +
+  labs(title = "German measures index (Mask obligation) over time by federal states",
+       x = "Date",
+       y = "Measures index (Mask obligation) federal states per day (in %)")
+ggsave(filename = "Plots/german_restrictions/measures_maks_date.png", width = 12, height = 9)
 ```
 
 ## Analysis of macrodata with restriction data
@@ -122,7 +158,7 @@ ggplot(data = table_NA_D1_Date, mapping = aes(x = RecordedDate, y = count_NA)) +
   labs(title = "NAs D1 (anxious) over time",
        x = "Date",
        y = "Number of NAs - D1 (per day)")
-ggsave("Plots/Chris/microdata/NAs_RecordedDate_D1_lineplot.png", width = 12, height = 6)
+ggsave("Plots/microdata/NAs_RecordedDate_D1_lineplot.png", width = 12, height = 6)
 
 # Plot: Weekly observations of region_agg (federal state) over time
 ggplot(data = table_Obs_region_agg_Date_weekly, mapping = aes(x = Date, y = count, color = region_agg)) +
@@ -137,6 +173,7 @@ ggsave("Plots/microdata/Obs_Date_region_agg_weekly_lineplot.png", width = 12, he
 
 
 # Plots without table data:
+
 
 # Plot: Observations region_agg (federal state)
 ggplot(data = CTIS_microdata, mapping = aes(x = region_agg)) +
@@ -153,12 +190,76 @@ ggsave("Plots/microdata/Obs_region_agg_barplot.png", width = 12, height = 6)
 # Read microdata with restriction data
 micro_restr <- readRDS(file = "data/protected_data/micro_restr.RDS")
 
+# German restriction index -------------------------------------------------------
+
 # Plot: D1 vs German restriction index
-ggplot(data = micro_restr, mapping = aes(x = D1, y = bl_mn_idx_t)) +
+ggplot(data = micro_restr %>% select(D1, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D1, y = bl_mn_idx_t)) +
   geom_boxplot() +
   labs(title = "D1 (anxious) vs. German restriction index",
-       x = "Measures index federal states per day (in %)",
+       x = "D1 (anxious)",
        y = "Measures index federal states per day (in %)")
 ggsave("Plots/microdata/D1_restr_boxplot.png", width = 12, height = 9)
+
+# Plot: D1 vs German restriction index vs E4
+ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D1, y = bl_mn_idx_t, color = E4)) +
+    geom_boxplot() +
+    labs(title = "D1 (anxious) vs. German restriction index vs. age group",
+         x = "D1 (anxious)",
+         y = "Measures index federal states per day (in %)") + 
+    scale_color_brewer(palette = "Blues", name = "E4 (age group)")
+ggsave("Plots/microdata/D1_restr_E4_boxplot.png", width = 12, height = 6)
+
+# Plot: D1 vs German restriction index vs E8
+ggplot(data = micro_restr %>% select(D1, E8, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D1, y = bl_mn_idx_t, color = E8)) +
+    geom_boxplot() +
+    labs(title = "D1 (anxious) vs. German restriction index vs. education-level",
+         x = "D1 (anxious)",
+         y = "Measures index federal states per day (in %)") + 
+    scale_color_brewer(palette = "Blues", name = "E8 (education-level)")
+ggsave("Plots/microdata/D1_restr_E8_boxplot.png", width = 12, height = 5)
+
+# Plot: D1 vs German restriction index vs E2
+ggplot(data = micro_restr %>% select(D1, E2, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D1, y = bl_mn_idx_t, color = E2)) +
+    geom_boxplot() +
+    labs(title = "D1 (anxious) vs. German restriction index vs. area of living",
+         x = "D1 (anxious)",
+         y = "Measures index federal states per day (in %)") + 
+    scale_color_brewer(palette = "Dark2", name = "E2 (area of living)")
+ggsave("Plots/microdata/D1_restr_E2_boxplot.png", width = 12, height = 6)
+
+# Plot: D1 vs German restriction index vs E3
+ggplot(data = micro_restr %>% select(D1, E3, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D1, y = bl_mn_idx_t, color = E3)) +
+    geom_boxplot() +
+    labs(title = "D1 (anxious) vs. German restriction index vs. gender",
+         x = "D1 (anxious)",
+         y = "Measures index federal states per day (in %)") + 
+    scale_color_brewer(palette = "Dark2", name = "E3 (gender)")
+ggsave("Plots/microdata/D1_restr_E3_boxplot.png", width = 12, height = 6)
+
+# Plot: G1 vs German restriction index
+ggplot(data = micro_restr %>% select(G1, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = G1, y = bl_mn_idx_t)) +
+  geom_boxplot() +
+  labs(title = "G1 (worried catching covid) vs. German restriction index",
+       x = "G1 (worried catching covid)",
+       y = "Measures index federal states per day (in %)")
+ggsave("Plots/microdata/G1_restr_boxplot.png", width = 12, height = 9)
+
+# German restriction index (Mask obligation) -------------------------------------------------------
+
+# Plot: D1 vs German restriction index (Mask obligation) vs E4
+ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t_m16) %>% drop_na(), 
+       mapping = aes(x = D1, y = bl_mn_idx_t_m16, color = E4)) +
+    geom_boxplot() +
+    labs(title = "D1 (anxious) vs. German restriction index (Mask obligation) vs. age group",
+         x = "D1 (anxious)",
+         y = "Measures index (Mask obligation) federal states per day (in %)") + 
+    scale_color_brewer(palette = "Blues", name = "E4 (age group)")
+ggsave("Plots/microdata/D1_restr_masks_E4_boxplot.png", width = 12, height = 6)
 ```
 
