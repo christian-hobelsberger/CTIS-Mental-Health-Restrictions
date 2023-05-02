@@ -127,16 +127,18 @@ setwd("~/git/CTIS-Mental-Health-Restrictions")
 
 # Cleaning up microdata
 ```{r}
-# Loading microdata raw
+# Load microdata raw
 CTIS_microdata_raw <- read_csv(file = "data/protected_data/CTIS_microdata_raw.csv", col_names = TRUE,
                                col_types = c(.default = "f", weight = "d", RecordedDate = "T", 
                                              J1 = "d", E5 = "d", E7a = "d"),
                                na = c("NA", "-99", "-88", "-77"))
 
-# Removing wrong countries
+# Remove wrong countries & regions
 CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(country_agg == "Germany")
+CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(survey_region == "EU")
 CTIS_microdata_raw$country_agg <- droplevels(CTIS_microdata_raw$country_agg) # Drop other levels
 CTIS_microdata_raw$region_agg <- droplevels(CTIS_microdata_raw$region_agg) # Drop other levels
+CTIS_microdata_raw$survey_region <- droplevels(CTIS_microdata_raw$survey_region) # Drop other levels
 
 # TODO: Possibly clean survey_region levels -> ROW
 
@@ -243,11 +245,14 @@ levels(CTIS_microdata_raw$D7a) <- list(
 # Filter dates until June 12, 2022 because of survey end
 CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(RecordedDate < as.Date("2022-06-26"))
 
+# Recoding from 0 to 1 of the variable E5 („How many people slept in the place where you stayed last night 
+# (including yourself)”)
+CTIS_microdata_raw["E5"][CTIS_microdata_raw["E5"] == 0] <- 1
+
 # Filter for sensible E5, J1, E7a
 CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(is.na(E5) | (E5 == as.integer(E5) & E5 <= 50))
-CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(is.na(J1) | (J1 == as.integer(J1) & J1 <= 7))
+CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(is.na(J1) | (J1 == as.integer(J1) & J1 <= 12))
 CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(is.na(E7a) | (E7a == as.integer(E7a) & E7a <= 50))
-
 # Create Date column
 CTIS_microdata_raw$Date <- as.Date(CTIS_microdata_raw$RecordedDate)
 
