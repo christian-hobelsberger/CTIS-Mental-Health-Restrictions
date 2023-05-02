@@ -199,7 +199,7 @@ ggplot(data = micro_restr %>% select(D1, bl_mn_idx_t) %>% drop_na(),
   labs(title = "D1 (anxious) vs. German restriction index",
        x = "D1 (anxious)",
        y = "Measures index federal states per day (in %)")
-ggsave("Plots/microdata/D1_restr_boxplot.png", width = 12, height = 9)
+ggsave("Plots/micro_restrictions/D1_restr_boxplot.png", width = 12, height = 9)
 
 # Plot: D1 vs German restriction index vs E4
 ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t) %>% drop_na(), 
@@ -209,7 +209,7 @@ ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t) %>% drop_na(),
          x = "D1 (anxious)",
          y = "Measures index federal states per day (in %)") + 
     scale_color_brewer(palette = "Blues", name = "E4 (age group)")
-ggsave("Plots/microdata/D1_restr_E4_boxplot.png", width = 12, height = 6)
+ggsave("Plots/micro_restrictions/D1_restr_E4_boxplot.png", width = 12, height = 6)
 
 # Plot: D1 vs German restriction index vs E8
 ggplot(data = micro_restr %>% select(D1, E8, bl_mn_idx_t) %>% drop_na(), 
@@ -219,7 +219,7 @@ ggplot(data = micro_restr %>% select(D1, E8, bl_mn_idx_t) %>% drop_na(),
          x = "D1 (anxious)",
          y = "Measures index federal states per day (in %)") + 
     scale_color_brewer(palette = "Blues", name = "E8 (education-level)")
-ggsave("Plots/microdata/D1_restr_E8_boxplot.png", width = 12, height = 5)
+ggsave("Plots/micro_restrictions/D1_restr_E8_boxplot.png", width = 12, height = 5)
 
 # Plot: D1 vs German restriction index vs E2
 ggplot(data = micro_restr %>% select(D1, E2, bl_mn_idx_t) %>% drop_na(), 
@@ -229,7 +229,7 @@ ggplot(data = micro_restr %>% select(D1, E2, bl_mn_idx_t) %>% drop_na(),
          x = "D1 (anxious)",
          y = "Measures index federal states per day (in %)") + 
     scale_color_brewer(palette = "Dark2", name = "E2 (area of living)")
-ggsave("Plots/microdata/D1_restr_E2_boxplot.png", width = 12, height = 6)
+ggsave("Plots/micro_restrictions/D1_restr_E2_boxplot.png", width = 12, height = 6)
 
 # Plot: D1 vs German restriction index vs E3
 ggplot(data = micro_restr %>% select(D1, E3, bl_mn_idx_t) %>% drop_na(), 
@@ -239,7 +239,7 @@ ggplot(data = micro_restr %>% select(D1, E3, bl_mn_idx_t) %>% drop_na(),
          x = "D1 (anxious)",
          y = "Measures index federal states per day (in %)") + 
     scale_color_brewer(palette = "Dark2", name = "E3 (gender)")
-ggsave("Plots/microdata/D1_restr_E3_boxplot.png", width = 12, height = 6)
+ggsave("Plots/micro_restrictions/D1_restr_E3_boxplot.png", width = 12, height = 6)
 
 # Plot: G1 vs German restriction index
 ggplot(data = micro_restr %>% select(G1, bl_mn_idx_t) %>% drop_na(), 
@@ -248,7 +248,7 @@ ggplot(data = micro_restr %>% select(G1, bl_mn_idx_t) %>% drop_na(),
   labs(title = "G1 (worried catching covid) vs. German restriction index",
        x = "G1 (worried catching covid)",
        y = "Measures index federal states per day (in %)")
-ggsave("Plots/microdata/G1_restr_boxplot.png", width = 12, height = 9)
+ggsave("Plots/micro_restrictions/G1_restr_boxplot.png", width = 12, height = 9)
 
 # German restriction index (Mask obligation) -------------------------------------------------------
 
@@ -260,6 +260,6 @@ ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t_m16) %>% drop_na(),
          x = "D1 (anxious)",
          y = "Measures index (Mask obligation) federal states per day (in %)") + 
     scale_color_brewer(palette = "Blues", name = "E4 (age group)")
-ggsave("Plots/microdata/D1_restr_masks_E4_boxplot.png", width = 12, height = 6)
+ggsave("Plots/micro_restrictions/D1_restr_masks_E4_boxplot.png", width = 12, height = 6)
 ```
 
