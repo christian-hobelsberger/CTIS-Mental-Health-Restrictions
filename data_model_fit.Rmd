@@ -42,7 +42,7 @@ micro_restr$D7a <- relevel(micro_restr$D7a, ref = "No")
 # E7a = Number rooms used for sleeping, D7a = Paid work
 
 model_glm_restr <- glm(anxious ~ bl_mn_idx_t + bl_mn_idx_t_m02a + bl_mn_idx_t_m02b + bl_mn_idx_t_m03 + bl_mn_idx_t_m16 + 
-                   E4 + E3 + E8 + E2 + E5 + D10 + B0 + G1 + J1 + E7a + D7a,
+                   E4 + E3 + E8 + E2, #  + E5 + D10 + B0 + G1 + J1 + E7a + D7a,
                  family=binomial(link='logit'), data=micro_restr)
 summary(model_glm_restr)
 sink("Plots/models/glm_restr.txt")
