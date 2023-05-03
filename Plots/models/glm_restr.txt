@@ -6,42 +6,42 @@ glm(formula = anxious ~ bl_mn_idx_t + bl_mn_idx_t_m02a + bl_mn_idx_t_m02b +
 
 Deviance Residuals: 
     Min       1Q   Median       3Q      Max  
--1.0005  -0.2950  -0.2599  -0.2217   3.0887  
+-0.9782  -0.2928  -0.2574  -0.2201   3.0709  
 
 Coefficients:
-                                                  Estimate Std. Error z value Pr(>|z|)    
-(Intercept)                                     -3.4447740  0.0348413 -98.870  < 2e-16 ***
-bl_mn_idx_t                                      0.0077405  0.0008073   9.588  < 2e-16 ***
-bl_mn_idx_t_m02a                                -0.0037536  0.0006368  -5.894 3.77e-09 ***
-bl_mn_idx_t_m02b                                 0.0010953  0.0006798   1.611  0.10716    
-bl_mn_idx_t_m03                                 -0.0041171  0.0004526  -9.096  < 2e-16 ***
-bl_mn_idx_t_m16                                 -0.0024992  0.0003997  -6.253 4.03e-10 ***
-E418-24                                          0.8389554  0.0317999  26.382  < 2e-16 ***
-E425-34                                          0.3648864  0.0229778  15.880  < 2e-16 ***
-E435-44                                          0.1490347  0.0222434   6.700 2.08e-11 ***
-E455-64                                         -0.1944878  0.0249358  -7.800 6.21e-15 ***
-E465-74                                         -0.7487693  0.0390056 -19.196  < 2e-16 ***
-E475+                                           -0.5628830  0.0684794  -8.220  < 2e-16 ***
-E3Female                                         0.3825815  0.0162609  23.528  < 2e-16 ***
-E3Other                                          1.5039184  0.0776622  19.365  < 2e-16 ***
-E3Prefer not to answer                           0.8476306  0.0697302  12.156  < 2e-16 ***
-E8No formal schooling                            0.9426725  0.0776378  12.142  < 2e-16 ***
-E8Less than primary school                       0.7657718  0.0600547  12.751  < 2e-16 ***
-E8Primary school completed                       0.3313094  0.0386933   8.562  < 2e-16 ***
-E8High school (or equivalent) completed         -0.0514030  0.0187147  -2.747  0.00602 ** 
-E8College/ pre-university/ University completed -0.1864018  0.0224683  -8.296  < 2e-16 ***
-E8University post-graduate degree completed     -0.1853772  0.0292379  -6.340 2.29e-10 ***
-E2City                                           0.0558231  0.0185601   3.008  0.00263 ** 
-E2Village or rural area                         -0.1190972  0.0197737  -6.023 1.71e-09 ***
+                                                  Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)                                     -3.5386101  0.0318278 -111.180  < 2e-16 ***
+bl_mn_idx_t                                      0.0064342  0.0007672    8.387  < 2e-16 ***
+bl_mn_idx_t_m02a                                -0.0020902  0.0005728   -3.649 0.000263 ***
+bl_mn_idx_t_m02b                                 0.0008597  0.0006069    1.416 0.156649    
+bl_mn_idx_t_m03                                 -0.0026616  0.0004039   -6.589 4.42e-11 ***
+bl_mn_idx_t_m16                                 -0.0020401  0.0003781   -5.395 6.85e-08 ***
+E418-24                                          0.8498904  0.0300904   28.245  < 2e-16 ***
+E425-34                                          0.3788072  0.0219731   17.240  < 2e-16 ***
+E435-44                                          0.1568334  0.0213709    7.339 2.16e-13 ***
+E455-64                                         -0.1845834  0.0239559   -7.705 1.31e-14 ***
+E465-74                                         -0.7447121  0.0375420  -19.837  < 2e-16 ***
+E475+                                           -0.5450109  0.0656172   -8.306  < 2e-16 ***
+E3Female                                         0.3781203  0.0155307   24.347  < 2e-16 ***
+E3Other                                          1.4884210  0.0749242   19.866  < 2e-16 ***
+E3Prefer not to answer                           0.8329770  0.0667150   12.486  < 2e-16 ***
+E8No formal schooling                            0.9355564  0.0750007   12.474  < 2e-16 ***
+E8Less than primary school                       0.7542961  0.0577050   13.072  < 2e-16 ***
+E8Primary school completed                       0.3404330  0.0369976    9.201  < 2e-16 ***
+E8High school (or equivalent) completed         -0.0521353  0.0179057   -2.912 0.003595 ** 
+E8College/ pre-university/ University completed -0.1923945  0.0214956   -8.950  < 2e-16 ***
+E8University post-graduate degree completed     -0.1906497  0.0279108   -6.831 8.45e-12 ***
+E2City                                           0.0504595  0.0177310    2.846 0.004430 ** 
+E2Village or rural area                         -0.1246822  0.0189168   -6.591 4.37e-11 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 (Dispersion parameter for binomial family taken to be 1)
 
-    Null deviance: 156104  on 498909  degrees of freedom
-Residual deviance: 152443  on 498887  degrees of freedom
-  (608541 observations deleted due to missingness)
-AIC: 152489
+    Null deviance: 171126  on 553085  degrees of freedom
+Residual deviance: 167172  on 553063  degrees of freedom
+  (1340622 observations deleted due to missingness)
+AIC: 167218
 
 Number of Fisher Scoring iterations: 6
 

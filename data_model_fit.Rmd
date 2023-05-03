@@ -54,9 +54,9 @@ exp(model_glm_restr$coefficients)
 plot_model(model_glm_restr)
 ggsave("Plots/models/model_glm_restr.png", width = 12, height = 9)
 
-all.models <- list()
-all.models[[1]] <- model_glm
-
-plot_models(all.models)
-ggsave("Plots/models/model_glm.png", width = 12, height = 9)
+# all.models <- list()
+# all.models[[1]] <- model_glm
+# 
+# plot_models(all.models)
+# ggsave("Plots/models/model_glm.png", width = 12, height = 9)
 ```
