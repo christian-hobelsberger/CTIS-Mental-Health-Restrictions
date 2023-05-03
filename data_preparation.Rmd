@@ -258,7 +258,7 @@ CTIS_microdata_raw$Date <- as.Date(CTIS_microdata_raw$RecordedDate)
 
 # set factor levels for region_agg
 CTIS_microdata_raw$region_agg <- 
-  factor(CTIS_microdata$region_agg,levels(CTIS_microdata$region_agg)[order(as.vector(levels(CTIS_microdata$region_agg)))])
+  factor(CTIS_microdata_raw$region_agg,levels(CTIS_microdata_raw$region_agg)[order(as.vector(levels(CTIS_microdata_raw$region_agg)))])
 
 saveRDS(object = CTIS_microdata_raw, file = "data/protected_data/CTIS_microdata.RDS")
 ```
