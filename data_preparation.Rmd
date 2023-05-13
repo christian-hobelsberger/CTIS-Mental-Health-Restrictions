@@ -260,6 +260,9 @@ CTIS_microdata_raw$Date <- as.Date(CTIS_microdata_raw$RecordedDate)
 CTIS_microdata_raw$region_agg <- 
   factor(CTIS_microdata_raw$region_agg,levels(CTIS_microdata_raw$region_agg)[order(as.vector(levels(CTIS_microdata_raw$region_agg)))])
 
+# Final filter for model parameters
+CTIS_microdata_raw <- CTIS_microdata_raw %>% drop_na(E4, E3, E8, E2)
+
 saveRDS(object = CTIS_microdata_raw, file = "data/protected_data/CTIS_microdata.RDS")
 ```
 

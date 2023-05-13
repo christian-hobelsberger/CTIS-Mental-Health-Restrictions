@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(gridExtra)
 
 # Read tables from data_analysis_prep_tables.R
 table_Obs_D1_Date <- readRDS(file = "tables/analysis/table_Obs_D1_Date.RDS")
@@ -139,6 +140,19 @@ ggsave(filename = "Plots/macro_restrictions/food_security.png", width = 12, heig
 ```{r general analysis of microdata}
 # Read in microdata
 CTIS_microdata <- readRDS(file = "data/protected_data/CTIS_microdata.RDS")
+
+
+# Testing -----------------------------------------------------------------------------------------------------
+
+# Spearman rank correlation coefficient of D1, D2: 0.6060078
+cor(as.numeric(CTIS_microdata$D1), as.numeric(CTIS_microdata$D2), use="pairwise.complete.obs", method = "spearman")
+
+# Save the crosstable of D1 and D2 as a PDF file
+cross_table_D1_D2 <- table(CTIS_microdata$D1, CTIS_microdata$D2)
+pdf("tables/cross_tables/cross_table_D1_D2.pdf", height=4, width=10)
+grid.table(cross_table_D1_D2)
+dev.off()
+
 
 # Plots with table data: 
 
