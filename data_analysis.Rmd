@@ -212,13 +212,13 @@ ggplot(data = table_Obs_D1_Date, mapping = aes(x = RecordedDate, y = count)) +
        y = "Number of Observations - D1 (per day)")
 ggsave("Plots/microdata/Obs_RecordedDate_D1_lineplot.png", width = 12, height = 6)
 
-# Plot: NAs D1 (anxious) over time
-ggplot(data = table_NA_D1_Date, mapping = aes(x = RecordedDate, y = count_NA)) +
+# Plot: Observations D2 (depressed) over time
+ggplot(data = table_Obs_D2_Date, mapping = aes(x = RecordedDate, y = count)) +
   geom_line() +
-  labs(title = "NAs D1 (anxious) over time",
+  labs(title = "Observations D2 (depressed) over time",
        x = "Date",
-       y = "Number of NAs - D1 (per day)")
-ggsave("Plots/microdata/NAs_RecordedDate_D1_lineplot.png", width = 12, height = 6)
+       y = "Number of Observations - D2 (per day)")
+ggsave("Plots/microdata/Obs_RecordedDate_D2_lineplot.png", width = 12, height = 6)
 
 # Plot: Weekly observations of region_agg (federal state) over time
 ggplot(data = table_Obs_region_agg_Date_weekly, mapping = aes(x = Date, y = count, color = region_agg)) +
