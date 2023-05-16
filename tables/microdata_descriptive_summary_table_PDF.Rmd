@@ -8,6 +8,7 @@ output:
 # install.packages("pander")
 # install.packages("desctable")
 # install.packages("memisc")
+# library(tidyverse)
 # 
 # 
 # # Read microdata with restriction data
@@ -47,137 +48,137 @@ output:
 --------------------------------------------------------------------------
            Variables                N        %       Med    Mean     IQR  
 -------------------------------- -------- -------- ------- ------- -------
- **During the past 7 days, how    525605   69.46     --      --       1   
+ **During the past 7 days, how    522070    --       --      --       --   
  often did you feel so nervous                                            
   that nothing could calm you                                             
           down? (D1)**                                                    
 
-*None of the time*                365108   15.81     --      --       0   
+*None of the time*                362875   69.51     --      --       --  
 
-*A little of the time*            83105    11.17     --      --       0   
+*A little of the time*            82481    15.8      --      --       --  
 
-*Some of the time*                58726    2.439     --      --       0   
+*Some of the time*                58261    11.16     --      --       --  
 
- *Most of the time*               12821    1.112     --      --       0   
+ *Most of the time*               12668    2.426     --      --       --  
 
-*All the time*                     5845    525605    --      --       0   
+*All the time*                     5785    1.108     --      --       --  
 
- **During the past 7 days, how    525605    58.6     --      --       1   
+ **During the past 7 days, how    522070    --       --      --       --   
      often did you feel so                                                
   depressed that nothing could                                            
       cheer you up? (D2)**                                                
 
-*None of the time*                307998   18.08     --      --       0   
+*None of the time*                306068   58.63     --      --       --  
 
-*A little of the time*            95013    16.19     --      --       0   
+*A little of the time*            94338    18.07     --      --       --  
 
-*Some of the time*                85108    4.899     --      --       0   
+*Some of the time*                84521    16.19     --      --       --  
 
-*Most of the time*                25752    2.232     --      --       0   
+*Most of the time*                25523    4.889     --      --       --  
 
-*All the time*                    11734    525605    --      --       0   
+*All the time*                    11620    2.226     --      --       --  
 
-     **What is your age?**        525605   3.895     --      --       2   
+     **What is your age?**        522070    --       --      --       --   
 
- *18-24*                          20472    17.35     --      --       0   
+ *18-24*                          20251    3.879     --      --       --  
 
- *25-34*                          91190    23.82     --      --       0   
+ *25-34*                          90475    17.33     --      --       --  
 
- *35-44*                          125206    22.8     --      --       0   
+ *35-44*                          124396   23.83     --      --       --  
 
- *45-54*                          119855   20.25     --      --       0   
+ *45-54*                          119116   22.82     --      --       --  
 
- *55-64*                          106413   9.684     --      --       0   
+ *55-64*                          105750   20.26     --      --       --  
 
- *65-74*                          50899    2.201     --      --       0   
+ *65-74*                          50577    9.688     --      --       --  
 
-  *75+*                           11570    525605    --      --       0   
+  *75+*                           11505    2.204     --      --       --  
 
-    **What is your gender?**      525605   43.46     --      --       1   
+    **What is your gender?**      522070    --       --      --       --   
 
-   *Male*                         228404   55.69     --      --       0   
+   *Male*                         226811   43.44     --      --       --  
 
-   *Female*                       292686   0.2882    --      --       0   
+   *Female*                       290789   55.7      --      --       --  
 
-   *Other*                         1515    0.5708    --      --       0   
+   *Other*                         1501    0.2875    --      --       --  
 
-   *Prefer not to answer*          3000    525605    --      --       0   
+   *Prefer not to answer*          2969    0.5687    --      --       --  
 
- **What is the highest level of   525605   0.3428    --      --       2   
+ **What is the highest level of   522070    --       --      --       --   
     education that you have                                               
           completed?**                                                    
 
- *No formal schooling*             1802    0.7386    --      --       0   
+ *No formal schooling*             1784    0.3417    --      --       --  
 
-*Less than primary school*         3882    4.302     --      --       0   
+*Less than primary school*         3857    0.7388    --      --       --  
 
-*Primary school completed*        22611    32.25     --      --       0   
+*Primary school completed*        22476    4.305     --      --       --  
 
-*Secondary school complete*       169503   31.82     --      --       0   
+*Secondary school complete*       168656   32.31     --      --       --  
 
-*High school (or                  167241   20.61     --      --       0   
+*High school (or                  166316   31.86     --      --       --  
 equivalent) completed*
 
-*College/                         108301   9.944     --      --       0   
+*College/                         107209   20.54     --      --       --  
    pre-university/ University                                             
            completed*                                                     
 
-*University                       52265    525605    --      --       0   
+*University                       51772    9.917     --      --       --  
       post-graduate degree                                                
            completed*                                                     
 
-     **Which of these best        525605   38.64     --      --       2   
+     **Which of these best        522070   --       --      --       --   
   describes the area where you                                            
     are currently staying?**                                              
 
-*City*                            203070   28.27     --      --       0   
+*City*                            201459   38.59     --      --       --  
                                                       
 
-*Town*                            148583    33.1     --      --       0   
+*Town*                            147563   28.26     --      --       --  
 
-*Village or rural area*           173952   525605    --      --       0
+*Village or rural area*           173048   33.15     --      --       --
 --------------------------------------------------------------------------
 
 
 --------------------------------------------------------------------------
            Variables                N        %       Med    Mean     IQR  
 -------------------------------- -------- -------- ------- ------- -------
-**How many people slept in the    525605     --       2     2.555     2   
+**How many people slept in the    522070     --       2     2.555     2
   place where you stayed last                                             
   night (including yourself)?**                                             
 
-**How many rooms are used for     525605     --       2     1.976     2   
+**How many rooms are used for     522070     --       2     1.975     2 
   sleeping in the place where                                             
         you are staying?**                                                  
 
- **In the past 4 weeks, did you   525605    72.1     --      --       1   
+ **In the past 4 weeks, did you   522070    --       --      --       --      
      do any work for pay?**                                               
 
-*Yes*                             378987    27.9     --      --       0   
+*Yes*                             376772   72.17     --      --       --  
 
-*No*                              146618   525605    --      --       0   
+*No*                              145298   27.83     --      --       --  
 
-  **Index (0-100%) for the        525605     --     40.32   35.64   15.82 
+  **Index (0-100%) for the        522070     --     40.32   35.62   15.82 
     severity of containment                                               
    measures imposed per day:                                              
             General**                                                       
 
-**Index (0-100) for the severity  525605     --     40.6    39.68   39.6  
+**Index (0-100) for the severity  522070     --     40.6    39.71   39.6  
     of containment measures                                               
  prescribed per day: Secondary                                            
             schools**                                                       
 
-**Index (0-100) for the severity  525605     --     40.6    36.59   19.8  
+**Index (0-100) for the severity  522070     --     40.6    36.6    19.8  
     of containment measures                                               
  prescribed per day: Elementary                                           
             Schools**                                                       
 
-**Index (0-100) for the severity  525605     --     20.8    29.42   19.8  
+**Index (0-100) for the severity  522070     --     20.8    29.45   19.8    
     of containment measures                                               
   prescribed per day: Daycare                                             
             centers**                                                       
 
-**Index (0-100) for the severity  525605     --      56     51.16    22   
+**Index (0-100) for the severity  522070     --      56     51.16    22   
     of containment measures                                               
     prescribed per day: Mask                                              
            obligation**                                                     
