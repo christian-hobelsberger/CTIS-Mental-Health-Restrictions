@@ -1,6 +1,7 @@
 # import packages
 install.packages("timetk")
 library(timetk)
+library(lubridate)
 library(tidyverse)
 
 # read microdata
@@ -96,3 +97,25 @@ saveRDS(object = table_Obs_region_agg_Date_weekly, file = "tables/analysis/table
 #   group_by(region_agg) %>%
 #   summarise(count = n())
 # saveRDS(object = table_Obs_region_agg, file = "tables/analysis/table_Obs_region_agg.RDS")
+
+table_D1_weekday <- CTIS_microdata %>%
+  select(RecordedDate, D1) %>%
+  drop_na() %>%
+  filter(RecordedDate <= "2022-06-15") %>%
+  mutate(day_of_week = wday(RecordedDate, label = TRUE)) %>%
+  select(day_of_week, D1) %>%
+  group_by(day_of_week) %>%
+  summarise(n = n()) %>%
+  mutate(perc = n/sum(n))
+saveRDS(object = table_D1_weekday, file = "tables/analysis/table_D1_weekday.RDS")
+
+table_D1_weekday_per_D1 <- CTIS_microdata %>%
+  select(RecordedDate, D1) %>%
+  drop_na() %>%
+  filter(RecordedDate <= "2022-06-15") %>%
+  mutate(day_of_week = wday(RecordedDate, label = TRUE)) %>%
+  select(day_of_week, D1) %>%
+  group_by(day_of_week, D1) %>%
+  summarise(n = n()) %>%
+  mutate(perc = n/sum(n))
+saveRDS(object = table_D1_weekday_per_D1, file = "tables/analysis/table_D1_weekday_per_D1.RDS")

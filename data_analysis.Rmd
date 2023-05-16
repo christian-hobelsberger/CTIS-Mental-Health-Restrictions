@@ -19,6 +19,9 @@ table_NA_D4_Date <- readRDS(file = "tables/analysis/table_NA_D4_Date.RDS")
 table_Obs_D5_Date <- readRDS(file = "tables/analysis/table_Obs_D5_Date.RDS")
 table_NA_D5_Date <- readRDS(file = "tables/analysis/table_NA_D5_Date.RDS")
 table_Obs_region_agg_Date_weekly <- readRDS(file = "tables/analysis/table_Obs_region_agg_Date_weekly.RDS")
+table_D1_weekday <- readRDS(file = "tables/analysis/table_D1_weekday.RDS")
+table_D1_weekday_per_D1 <- readRDS(file = "tables/analysis/table_D1_weekday_per_D1.RDS")
+
 
 # Function to plot count, mean in boxplot; source:
 # https://gscheithauer.medium.com/how-to-add-number-of-observations-to-a-ggplot2-boxplot-b22710f7ef80
@@ -53,11 +56,10 @@ stat_box_data_115 <- function(x, upper_limit = 115) {
 ```{r Analysis of Corona data from Germany}
 bl_massnahmen_index_tag <- readRDS(file = "data/protected_data/bl_massnahmen_index_tag.RDS")
 
-unique(bl_massnahmen_index_tag$bundesland)
-
 # Plot: German restriction index over time by federal state 
 ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t, color = bundesland)) +
-  geom_line(alpha = .5)  +
+  geom_line(alpha = .5) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-01-01")), linetype="dashed") +
   labs(title = "German measures index over time by federal states",
        x = "Date",
        y = "Measures index federal states per day (in %)")
@@ -67,6 +69,7 @@ ggsave(filename = "Plots/german_restrictions/measures_date.png", width = 12, hei
 # Plot: German restriction index over time for Bavaria 
 ggplot(data = filter(bl_massnahmen_index_tag, bundesland == "Bayern"), 
        mapping = aes(x = datum, y = bl_mn_idx_t)) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-01-01")), linetype="dashed") +
   geom_line()  +
   labs(title = "German measures index over time for Bavaria",
        x = "Date",
@@ -75,7 +78,8 @@ ggsave(filename = "Plots/german_restrictions/measures_date_bavaria.png", width =
 
 # Plot: German restriction index (Daycare centers) over time by federal state 
 ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t_m03, color = bundesland)) +
-  geom_line(alpha = .5)  +
+  geom_line(alpha = .5) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-01-01")), linetype="dashed") +
   labs(title = "German measures index (Daycare centers) over time by federal states",
        x = "Date",
        y = "Measures index (Daycare centers) federal states per day (in %)")
@@ -83,7 +87,8 @@ ggsave(filename = "Plots/german_restrictions/measures_daycare_date.png", width =
 
 # Plot: German restriction index (Secondary schools) over time by federal state 
 ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t_m02a, color = bundesland)) +
-  geom_line(alpha = .5)  +
+  geom_line(alpha = .5) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-01-01")), linetype="dashed") +
   labs(title = "German measures index (Secondary schools) over time by federal states",
        x = "Date",
        y = "Measures index (Secondary schools) federal states per day (in %)")
@@ -91,7 +96,8 @@ ggsave(filename = "Plots/german_restrictions/measures_sec_schools_date.png", wid
 
 # Plot: German restriction index (Elementary schools) over time by federal state 
 ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t_m02b, color = bundesland)) +
-  geom_line(alpha = .5)  +
+  geom_line(alpha = .5) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-01-01")), linetype="dashed") +
   labs(title = "German measures index (Elementary schools) over time by federal states",
        x = "Date",
        y = "Measures index (Elementary schools) federal states per day (in %)")
@@ -99,7 +105,8 @@ ggsave(filename = "Plots/german_restrictions/measures_elem_schools_date.png", wi
 
 # Plot: German restriction index (Mask obligation) over time by federal state 
 ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t_m16, color = bundesland)) +
-  geom_line(alpha = .5)  +
+  geom_line(alpha = .5) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-01-01")), linetype="dashed") +
   labs(title = "German measures index (Mask obligation) over time by federal states",
        x = "Date",
        y = "Measures index (Mask obligation) federal states per day (in %)")
@@ -209,6 +216,32 @@ ggplot(data = table_Obs_region_agg_Date_weekly, mapping = aes(x = Date, y = coun
        y = "Number of weekly observations - region_agg (federal state)") +
   guides(color=guide_legend(title="region_agg (federal state)"))
 ggsave("Plots/microdata/Obs_Date_region_agg_weekly_lineplot.png", width = 12, height = 6)
+
+# Plot: D1 (anxious) vs. weekdays - abs
+ggplot(data = table_D1_weekday, mapping = aes(x = day_of_week, y = n)) +
+  geom_bar(stat = "identity") +
+  labs(title = "D1 (anxious) vs. weekdays - absolute", 
+       x = "Day of the week",
+       y = "Number of D1 (anxious)")
+ggsave("Plots/Chris/table_data/D1_vs_weekday_abs.png", width = 12, height = 9)
+
+# Plot: D1 (anxious) vs. weekdays - rel
+ggplot(data = table_D1_weekday, mapping = aes(x = day_of_week, y = perc)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(title = "D1 (anxious) vs. weekdays - absolute", 
+       x = "Day of the week",
+       y = "Number of D1 (anxious)")
+ggsave("Plots/Chris/table_data/D1_vs_weekday_abs.png", width = 12, height = 9)
+
+# Plot: D1 (anxious) per category vs. weekdays - rel
+ggplot(data = table_D1_weekday_rel, mapping = aes(x = day_of_week, y = n)) +
+  geom_bar(mapping = aes(fill = D1), position = "dodge", stat = "identity") +
+  labs(title = "D1 (anxious) per category vs. weekdays - relative", 
+       x = "Day of the week",
+       y = "Count",) + 
+  scale_fill_brewer(palette = "Blues", name = "D1 (anxious)")
+ggsave("Plots/Chris/table_data/D1_vs_weekday_rel.png", width = 12, height = 9)
 
 
 
