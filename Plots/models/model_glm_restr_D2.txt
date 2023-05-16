@@ -1,0 +1,49 @@
+
+Call:
+glm(formula = depressed ~ bl_mn_idx_t + bl_mn_idx_t_m02a + bl_mn_idx_t_m02b + 
+    bl_mn_idx_t_m03 + bl_mn_idx_t_m16 + E4 + E3 + E8 + E2 + E5 + 
+    D7a + E7a, family = binomial(link = "logit"), data = micro_restr)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.4748  -0.4100  -0.3414  -0.2801   3.3920  
+
+Coefficients:
+                                                  Estimate Std. Error z value Pr(>|z|)    
+(Intercept)                                     -2.1914390  0.0272138 -80.527  < 2e-16 ***
+bl_mn_idx_t                                      0.0050277  0.0005801   8.667  < 2e-16 ***
+bl_mn_idx_t_m02a                                -0.0008440  0.0004311  -1.958  0.05025 .  
+bl_mn_idx_t_m02b                                 0.0010596  0.0004547   2.330  0.01980 *  
+bl_mn_idx_t_m03                                 -0.0020758  0.0003042  -6.823 8.89e-12 ***
+bl_mn_idx_t_m16                                 -0.0012951  0.0002820  -4.592 4.39e-06 ***
+E418-24                                          1.0583136  0.0222655  47.532  < 2e-16 ***
+E425-34                                          0.5534150  0.0163563  33.835  < 2e-16 ***
+E435-44                                          0.2006428  0.0163376  12.281  < 2e-16 ***
+E455-64                                         -0.3032341  0.0185740 -16.326  < 2e-16 ***
+E465-74                                         -1.2956946  0.0312749 -41.429  < 2e-16 ***
+E475+                                           -1.2559182  0.0579197 -21.684  < 2e-16 ***
+E3Female                                         0.2117767  0.0115730  18.299  < 2e-16 ***
+E3Other                                          1.2385275  0.0663299  18.672  < 2e-16 ***
+E3Prefer not to answer                           0.6503026  0.0569010  11.429  < 2e-16 ***
+E8No formal schooling                            0.4215620  0.0687692   6.130 8.78e-10 ***
+E8Less than primary school                       0.3288114  0.0488057   6.737 1.62e-11 ***
+E8Primary school completed                       0.0270783  0.0304255   0.890  0.37347    
+E8High school (or equivalent) completed         -0.0614208  0.0131572  -4.668 3.04e-06 ***
+E8College/ pre-university/ University completed -0.3182815  0.0163380 -19.481  < 2e-16 ***
+E8University post-graduate degree completed     -0.3752212  0.0219964 -17.058  < 2e-16 ***
+E2City                                           0.0421582  0.0134784   3.128  0.00176 ** 
+E2Village or rural area                         -0.0574465  0.0141525  -4.059 4.93e-05 ***
+E5                                              -0.0398742  0.0035667 -11.180  < 2e-16 ***
+D7aYes                                          -0.6837623  0.0121470 -56.291  < 2e-16 ***
+E7a                                              0.0159626  0.0035581   4.486 7.25e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 267918  on 522069  degrees of freedom
+Residual deviance: 255239  on 522044  degrees of freedom
+AIC: 255291
+
+Number of Fisher Scoring iterations: 6
+

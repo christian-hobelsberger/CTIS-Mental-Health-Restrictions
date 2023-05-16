@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
-install.packages("glmnet", "sjPlot")
+install.packages(c("glmnet", "sjPlot"))
 library(glmnet)
 library(sjPlot)
 ```
@@ -20,7 +20,7 @@ micro_restr$anxious <- ifelse(micro_restr$D1 %in% levels(micro_restr$D1)[4:5],
                               ifelse(is.na(micro_restr$D1), NA, FALSE))
 micro_restr$depressed <- ifelse(micro_restr$D2 %in% levels(micro_restr$D1)[4:5], 
                                 TRUE, 
-                                ifelse(is.na(micro_restr$D1), NA, FALSE))
+                                ifelse(is.na(micro_restr$D2), NA, FALSE))
 ```
 
 # Microdata and restriction data logistic regression model
@@ -38,25 +38,73 @@ micro_restr$D7a <- relevel(micro_restr$D7a, ref = "No")
 # Fit model
 
 # E4 = Age, E3 = Gender, E8 = Education, E2 = Where do you live?, E5 = Number people slept in same place
-# D10 = Field of business, B0 = Had Covid?, G1 = Worried catching Covid?, J1 = Number children in houshold
 # E7a = Number rooms used for sleeping, D7a = Paid work
+# NOT INCLUDED: D10 = Field of business, B0 = Had Covid?, G1 = Worried catching Covid?, J1 = Number children in houshold
 
-model_glm_restr <- glm(anxious ~ bl_mn_idx_t + bl_mn_idx_t_m02a + bl_mn_idx_t_m02b + bl_mn_idx_t_m03 + bl_mn_idx_t_m16 + 
-                   E4 + E3 + E8 + E2 + E5 + D7a + E7a, # + D10 + B0 + G1 + J1,
-                 family=binomial(link='logit'), data=micro_restr)
-summary(model_glm_restr)
-sink("Plots/models/glm_restr.txt")
-print(summary(model_glm_restr))
+model_glm_restr_D1 <- glm(anxious ~ bl_mn_idx_t + bl_mn_idx_t_m02a + bl_mn_idx_t_m02b + bl_mn_idx_t_m03 + 
+                            bl_mn_idx_t_m16 + E4 + E3 + E8 + E2 + E5 + D7a + E7a,
+                          family=binomial(link='logit'), data=micro_restr)
+summary(model_glm_restr_D1)
+exp(model_glm_restr_D1$coefficients)
+
+model_glm_restr_D2 <- glm(depressed ~ bl_mn_idx_t + bl_mn_idx_t_m02a + bl_mn_idx_t_m02b + bl_mn_idx_t_m03 + 
+                            bl_mn_idx_t_m16 + E4 + E3 + E8 + E2 + E5 + D7a + E7a,
+                          family=binomial(link='logit'), data=micro_restr)
+summary(model_glm_restr_D2)
+exp(model_glm_restr_D2$coefficients)
+
+sink("Plots/models/model_glm_restr_D1.txt")
+print(summary(model_glm_restr_D1))
 sink()
-exp(model_glm_restr$coefficients)
 
-# Forestplot
-plot_model(model_glm_restr)
-ggsave("Plots/models/model_glm_restr.png", width = 12, height = 9)
+sink("Plots/models/model_glm_restr_D2.txt")
+print(summary(model_glm_restr_D2))
+sink()
 
-# all.models <- list()
-# all.models[[1]] <- model_glm
-# 
-# plot_models(all.models)
-# ggsave("Plots/models/model_glm.png", width = 12, height = 9)
+
+# Forestplots
+plot_model(model_glm_restr_D1, ci_method = "wald")
+ggsave("Plots/models/model_glm_restr_D1.png", width = 12, height = 9)
+
+plot_model(model_glm_restr_D2, ci_method = "wald")
+ggsave("Plots/models/model_glm_restr_D2.png", width = 12, height = 9)
+
+## NO LOG-TRANSFORMATION
+
+# Create list of models and transform coefficients so x-axis is not log-transformed
+all.models <- list()
+all.models[[1]] <- model_glm_restr_D1
+all.models[[1]]$coefficients <- exp(all.models[[1]]$coefficients)
+all.models[[2]] <- model_glm_restr_D2
+all.models[[2]]$coefficients <- exp(all.models[[2]]$coefficients)
+
+# transform = NULL because coefficients are already exp() and x-axis should not be log-transformed
+plot_models(all.models, m.labels = c("anxious (D1)", "depressed (D2)"), transform = NULL)
+ggsave("Plots/models/model_glm_restr_D1_D2.png", width = 12, height = 9)
+
+## LOG-TRANSFORMATION
+
+# Create list of models
+all.models_log <- list()
+all.models_log[[1]] <- model_glm_restr_D1
+all.models_log[[2]] <- model_glm_restr_D2
+
+# transform = NULL because coefficients are already exp() and x-axis should not be log-transformed
+plot_models(all.models_log, m.labels = c("anxious (D1)", "depressed (D2)"))
+ggsave("Plots/models/model_glm_restr_D1_D2_log_scale.png", width = 12, height = 9)
+
+# Checking the fit
+
+# Generate predicted probabilities for a range of values of the categorical predictors
+pred_data <- expand.grid(E4 = levels(micro_restr$E4), E3 = levels(micro_restr$E3), E8 = levels(micro_restr$E8), E2 = levels(micro_restr$E2), D7a = levels(micro_restr$D7a))
+pred_data$pred_prob <- predict(model_glm_restr_D1, newdata = pred_data, type = "response")
+
+# Add observed outcome to predicted data
+pred_data$anxious <- micro_restr$anxious[match(paste(micro_restr$E4, micro_restr$E3, micro_restr$E8, micro_restr$E2, micro_restr$D7a), paste(pred_data$E4, pred_data$E3, pred_data$E8, pred_data$E2, pred_data$D7a))]
+
+# Create plot
+ggplot(pred_data, aes(x = pred_prob, y = anxious, color = E4, shape = E3)) +
+  geom_point() +
+  facet_wrap(~ E2 + D7a + E8, ncol = 3, scales = "free") +
+  labs(x = "Predicted probability", y = "Observed outcome")
 ```
