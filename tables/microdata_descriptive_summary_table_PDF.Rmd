@@ -1,10 +1,10 @@
 ---
 output:
-  word_document: default
   pdf_document: default
   html_document: default
 ---
 ```{r setup, include=FALSE}
+#  -------------------------FOR PDF-----------------------------------
 # install.packages("pander")
 # install.packages("desctable")
 # install.packages("memisc")
@@ -135,8 +135,13 @@ equivalent) completed*
 
 *Town*                            148583    33.1     --      --       0   
 
-*Village or rural area*           173952   525605    --      --       0   
+*Village or rural area*           173952   525605    --      --       0
+--------------------------------------------------------------------------
 
+
+--------------------------------------------------------------------------
+           Variables                N        %       Med    Mean     IQR  
+-------------------------------- -------- -------- ------- ------- -------
 **How many people slept in the    525605     --       2     2.555     2   
   place where you stayed last                                             
   night (including yourself)?**                                             
