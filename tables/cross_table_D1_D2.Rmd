@@ -1,0 +1,29 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+```{r setup, include=FALSE}
+# # Read in microdata
+# CTIS_microdata <- readRDS(file = "data/protected_data/CTIS_microdata.RDS")
+# 
+# # crosstable of D1 and D2
+# cross_table_D1_D2 <- table(CTIS_microdata$D1, CTIS_microdata$D2, dnn = c("D1", "D2"))
+# pander::pander(ftable(cross_table_D1_D2))
+```
+---------------------- ---- ------------------ ---------------------- ------------------ ------------------ --------------
+                        D2   None of the time   A little of the time   Some of the time   Most of the time   All the time 
+
+          D1                                                         
+
+   None of the time               277553               49222                29182               4615             2303     
+
+ A little of the time             22247                32470                22193               4393             1178
+
+   Some of the time                5252                11600                28960               9805             2644 
+
+   Most of the time                387                  811                  3504               5633             2333
+
+     All the time                  629                  235                  682                1077             3162
+---------------------- ---- ------------------ ---------------------- ------------------ ------------------ --------------

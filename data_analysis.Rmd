@@ -8,6 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(gridExtra)
+install.packages("kableExtra")
+install.packages("flextable")
 
 # Read tables from data_analysis_prep_tables.R
 table_Obs_D1_Date <- readRDS(file = "tables/analysis/table_Obs_D1_Date.RDS")
@@ -21,6 +23,9 @@ table_NA_D5_Date <- readRDS(file = "tables/analysis/table_NA_D5_Date.RDS")
 table_Obs_region_agg_Date_weekly <- readRDS(file = "tables/analysis/table_Obs_region_agg_Date_weekly.RDS")
 table_D1_weekday <- readRDS(file = "tables/analysis/table_D1_weekday.RDS")
 table_D1_weekday_per_D1 <- readRDS(file = "tables/analysis/table_D1_weekday_per_D1.RDS")
+table_D1_Date <- readRDS(file = "tables/analysis/table_D1_Date.RDS")
+table_D2_weekday <- readRDS(file = "tables/analysis/table_D2_weekday.RDS")
+table_D2_weekday_per_D2 <- readRDS(file = "tables/analysis/table_D2_weekday_per_D2.RDS")
 
 
 # Function to plot count, mean in boxplot; source:
@@ -181,8 +186,15 @@ CTIS_microdata <- readRDS(file = "data/protected_data/CTIS_microdata.RDS")
 # Spearman rank correlation coefficient of D1, D2: 0.6060078
 cor(as.numeric(CTIS_microdata$D1), as.numeric(CTIS_microdata$D2), use="pairwise.complete.obs", method = "spearman")
 
-# # Save the crosstable of D1 and D2 as a PDF file
+# Chi-square test of independence
+chisq.test(table(CTIS_microdata$D1, CTIS_microdata$D2))
+
+# # Save the crosstable of D1 and D2 as a latex code
 # cross_table_D1_D2 <- table(CTIS_microdata$D1, CTIS_microdata$D2)
+# 
+# knitr::kable(x = cross_table_D1_D2, format = "latex") %>%
+#   kableExtra::add_header_above(c("D1 (anxious)" = 1, "D2 (depressed)" = 5))
+# 
 # pdf("tables/cross_tables/cross_table_D1_D2.pdf", height=4, width=10)
 # grid.table(cross_table_D1_D2)
 # dev.off()
@@ -190,7 +202,7 @@ cor(as.numeric(CTIS_microdata$D1), as.numeric(CTIS_microdata$D2), use="pairwise.
 
 # Plots with table data: 
 
-## Plot Observations and NAs ----------------------------------------------------------------------------------
+# Plot Observations and NAs ----------------------------------------------------------------------------------
 
 # Plot: Observations D1 (anxious) over time
 ggplot(data = table_Obs_D1_Date, mapping = aes(x = RecordedDate, y = count)) +
@@ -217,36 +229,102 @@ ggplot(data = table_Obs_region_agg_Date_weekly, mapping = aes(x = Date, y = coun
   guides(color=guide_legend(title="region_agg (federal state)"))
 ggsave("Plots/microdata/Obs_Date_region_agg_weekly_lineplot.png", width = 12, height = 6)
 
+# D1 --------------------------------------------------------------------------------------------------------
+
 # Plot: D1 (anxious) vs. weekdays - abs
 ggplot(data = table_D1_weekday, mapping = aes(x = day_of_week, y = n)) +
   geom_bar(stat = "identity") +
-  labs(title = "D1 (anxious) vs. weekdays - absolute", 
+  labs(title = "Number of Observations D1 (anxious) per weekdays", 
        x = "Day of the week",
-       y = "Number of D1 (anxious)")
-ggsave("Plots/Chris/table_data/D1_vs_weekday_abs.png", width = 12, height = 9)
+       y = "Number of observations")
+ggsave("Plots/microdata/D1_vs_weekday_abs.png", width = 12, height = 6)
 
 # Plot: D1 (anxious) vs. weekdays - rel
 ggplot(data = table_D1_weekday, mapping = aes(x = day_of_week, y = perc)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  labs(title = "D1 (anxious) vs. weekdays - absolute", 
+  labs(title = "Relative frequency of D1 (anxious) per weekday", 
        x = "Day of the week",
-       y = "Number of D1 (anxious)")
-ggsave("Plots/Chris/table_data/D1_vs_weekday_abs.png", width = 12, height = 9)
+       y = "Relative frequency")
+ggsave("Plots/microdata/D1_vs_weekday_rel.png", width = 12, height = 6)
 
-# Plot: D1 (anxious) per category vs. weekdays - rel
-ggplot(data = table_D1_weekday_rel, mapping = aes(x = day_of_week, y = n)) +
+# Plot: D1 (anxious) category vs. weekdays - abs
+ggplot(data = table_D1_weekday_per_D1, mapping = aes(x = day_of_week, y = n)) +
   geom_bar(mapping = aes(fill = D1), position = "dodge", stat = "identity") +
-  labs(title = "D1 (anxious) per category vs. weekdays - relative", 
+  labs(title = "Number of observations per D1 (anxious) category per weekday", 
        x = "Day of the week",
-       y = "Count",) + 
+       y = "Number of observations") + 
   scale_fill_brewer(palette = "Blues", name = "D1 (anxious)")
-ggsave("Plots/Chris/table_data/D1_vs_weekday_rel.png", width = 12, height = 9)
+ggsave("Plots/microdata/D1_vs_weekday_category_abs.png", width = 12, height = 6)
+
+# Plot: D1 (anxious) category vs. weekdays - rel
+ggplot(data = table_D1_weekday_per_D1, mapping = aes(x = day_of_week, y = perc)) +
+  geom_bar(mapping = aes(fill = D1), position = "dodge", stat = "identity") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(title = "Relative frequency of D1 (anxious) categories observed per weekday", 
+       x = "Day of the week",
+       y = "Relative frequency") + 
+  scale_fill_brewer(palette = "Blues", name = "D1 (anxious)")
+ggsave("Plots/microdata/D1_vs_weekday_category_rel.png", width = 12, height = 6)
+
+# Plot D1 (anxious) vs RecordedDate
+ggplot(data = table_D1_Date, mapping = aes(x = RecordedDate, y = perc)) +
+  geom_line(mapping = aes(color = D1)) +
+  labs(title = "Relative frequencies of anxious variable over time",
+       x = "Date", 
+       y = "Relative frequencies",
+       color = "D1 (anxious)")
+ggsave("Plots/Chris/table_data/D1_vs_RecordedDate_lineplot.png", width = 12, height = 6)
 
 
+# D2 --------------------------------------------------------------------------------------------------------
 
+# Plot: D2 (depressed) vs. weekdays - abs
+ggplot(data = table_D2_weekday, mapping = aes(x = day_of_week, y = n)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Number of Observations D2 (depressed) per weekdays", 
+       x = "Day of the week",
+       y = "Number of observations")
+ggsave("Plots/microdata/D2_vs_weekday_abs.png", width = 12, height = 6)
 
-# Plots without table data:
+# Plot: D2 (depressed) vs. weekdays - rel
+ggplot(data = table_D2_weekday, mapping = aes(x = day_of_week, y = perc)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(title = "Relative frequency of D2 (depressed) per weekday", 
+       x = "Day of the week",
+       y = "Relative frequency")
+ggsave("Plots/microdata/D2_vs_weekday_rel.png", width = 12, height = 6)
+
+# Plot: D2 (depressed) category vs. weekdays - abs
+ggplot(data = table_D2_weekday_per_D2, mapping = aes(x = day_of_week, y = n)) +
+  geom_bar(mapping = aes(fill = D2), position = "dodge", stat = "identity") +
+  labs(title = "Number of observations per D2 (depressed) category per weekday", 
+       x = "Day of the week",
+       y = "Number of observations") + 
+  scale_fill_brewer(palette = "Blues", name = "D2 (depressed)")
+ggsave("Plots/microdata/D2_vs_weekday_category_abs.png", width = 12, height = 6)
+
+# Plot: D2 (depressed) category vs. weekdays - rel
+ggplot(data = table_D2_weekday_per_D2, mapping = aes(x = day_of_week, y = perc)) +
+  geom_bar(mapping = aes(fill = D2), position = "dodge", stat = "identity") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(title = "Relative frequency of D2 (depressed) categories observed per weekday", 
+       x = "Day of the week",
+       y = "Relative frequency of D2 (depressed) category") + 
+  scale_fill_brewer(palette = "Blues", name = "D2 (depressed)")
+ggsave("Plots/microdata/D2_vs_weekday_category_rel.png", width = 12, height = 6)
+
+# Plot D2 (depressed) vs RecordedDate
+ggplot(data = table_D2_Date, mapping = aes(x = RecordedDate, y = perc)) +
+  geom_line(mapping = aes(color = D2)) +
+  labs(title = "Relative frequencies of depressed variable over time",
+       x = "Date",
+       y = "Relative frequencies",
+       color = "D2 (depressed)")
+ggsave("Plots/Chris/table_data/D2_vs_RecordedDate_lineplot.png", width = 12, height = 6)
+
+# Plots without table data -------------------------------------------------------------------
 
 
 # Plot: Observations region_agg (federal state)
@@ -265,6 +343,8 @@ ggsave("Plots/microdata/Obs_region_agg_barplot.png", width = 12, height = 6)
 micro_restr <- readRDS(file = "data/protected_data/micro_restr.RDS")
 
 # German restriction index -------------------------------------------------------
+
+## D1 ----------------------------------------------------------------------------
 
 # Plot: D1 vs German restriction index
 ggplot(data = micro_restr %>% select(D1, bl_mn_idx_t) %>% drop_na(), 
@@ -361,7 +441,7 @@ ggplot(data = micro_restr %>% select(D1, D7a, bl_mn_idx_t) %>% drop_na(),
     scale_color_brewer(palette = "Dark2", name = "D7a (paid work?)")
 ggsave("Plots/micro_restrictions/D1_restr_D7a_boxplot.png", width = 12, height = 6)
 
-# German restriction index (Mask obligation) -------------------------------------------------------
+### German restriction index (Mask obligation) -------------------------------------------------------
 
 # Plot: D1 vs German restriction index (Mask obligation) vs E4
 ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t_m16) %>% drop_na(), 
@@ -378,5 +458,121 @@ ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t_m16) %>% drop_na(),
          y = "Measures index (Mask obligation) federal states per day (in %)") + 
     scale_color_brewer(palette = "Blues", name = "E4 (age group)")
 ggsave("Plots/micro_restrictions/D1_restr_masks_E4_boxplot.png", width = 12, height = 6)
+
+
+## D2 ----------------------------------------------------------------------------
+
+# Plot: D2 vs German restriction index
+ggplot(data = micro_restr %>% select(D2, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D2, y = bl_mn_idx_t)) +
+  geom_boxplot() +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+  labs(title = "D2 (depressed) vs. German restriction index",
+       x = "D2 (depressed)",
+       y = "Measures index federal states per day (in %)")
+ggsave("Plots/micro_restrictions/D2_restr_boxplot.png", width = 12, height = 9)
+
+# Plot: D2 vs German restriction index vs E4
+ggplot(data = micro_restr %>% select(D2, E4, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D2, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E4)) +
+    labs(title = "D2 (depressed) vs. German restriction index vs. age group",
+         x = "D2 (depressed)",
+         y = "Measures index federal states per day (in %)") + 
+    scale_color_brewer(palette = "Blues", name = "E4 (age group)")
+ggsave("Plots/micro_restrictions/D2_restr_E4_boxplot.png", width = 12, height = 6)
+
+# Plot: D2 vs German restriction index vs E8
+ggplot(data = micro_restr %>% select(D2, E8, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D2, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E8)) +
+    labs(title = "D2 (depressed) vs. German restriction index vs. education-level",
+         x = "D2 (depressed)",
+         y = "Measures index federal states per day (in %)") + 
+    scale_color_brewer(palette = "Blues", name = "E8 (education-level)")
+ggsave("Plots/micro_restrictions/D2_restr_E8_boxplot.png", width = 12, height = 6)
+
+# Plot: D2 vs German restriction index vs E2
+ggplot(data = micro_restr %>% select(D2, E2, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D2, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E2)) +
+    labs(title = "D2 (depressed) vs. German restriction index vs. area of living",
+         x = "D2 (depressed)",
+         y = "Measures index federal states per day (in %)") + 
+    scale_color_brewer(palette = "Dark2", name = "E2 (area of living)")
+ggsave("Plots/micro_restrictions/D2_restr_E2_boxplot.png", width = 12, height = 6)
+
+# Plot: D2 vs German restriction index vs E3
+ggplot(data = micro_restr %>% select(D2, E3, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D2, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E3)) +
+    labs(title = "D2 (depressed) vs. German restriction index vs. gender",
+         x = "D2 (depressed)",
+         y = "Measures index federal states per day (in %)") + 
+    scale_color_brewer(palette = "Dark2", name = "E3 (gender)")
+ggsave("Plots/micro_restrictions/D2_restr_E3_boxplot.png", width = 12, height = 6)
+
+# Plot: D2 vs German restriction index vs D7a
+ggplot(data = micro_restr %>% select(D2, D7a, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D2, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = D7a)) +
+    labs(title = "D2 (depressed) vs. German restriction index vs. paid work",
+         x = "D2 (depressed)",
+         y = "Measures index federal states per day (in %)") + 
+    scale_color_brewer(palette = "Dark2", name = "D7a (paid work?)")
+ggsave("Plots/micro_restrictions/D2_restr_D7a_boxplot.png", width = 12, height = 6)
+
+### German restriction index (Mask obligation) -------------------------------------------------------
+
+# Plot: D2 vs German restriction index (Mask obligation) vs E4
+ggplot(data = micro_restr %>% select(D2, E4, bl_mn_idx_t_m16) %>% drop_na(), 
+       mapping = aes(x = D2, y = bl_mn_idx_t_m16)) +
+  stat_summary(
+    fun.data = stat_box_data_115, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E4)) +
+    labs(title = "D2 (depressed) vs. German restriction index (Mask obligation) vs. age group",
+         x = "D2 (depressed)",
+         y = "Measures index (Mask obligation) federal states per day (in %)") + 
+    scale_color_brewer(palette = "Blues", name = "E4 (age group)")
+ggsave("Plots/micro_restrictions/D2_restr_masks_E4_boxplot.png", width = 12, height = 6)
 ```
 
