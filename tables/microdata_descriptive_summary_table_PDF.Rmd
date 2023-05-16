@@ -137,6 +137,13 @@ equivalent) completed*
 *Town*                            147563   28.26     --      --       --  
 
 *Village or rural area*           173048   33.15     --      --       --
+
+ **In the past 4 weeks, did you   522070    --       --      --       --      
+     do any work for pay?**                                               
+
+*Yes*                             376772   72.17     --      --       --  
+
+*No*                              145298   27.83     --      --       --  
 --------------------------------------------------------------------------
 
 
@@ -150,13 +157,6 @@ equivalent) completed*
 **How many rooms are used for     522070     --       2     1.975     2 
   sleeping in the place where                                             
         you are staying?**                                                  
-
- **In the past 4 weeks, did you   522070    --       --      --       --      
-     do any work for pay?**                                               
-
-*Yes*                             376772   72.17     --      --       --  
-
-*No*                              145298   27.83     --      --       --  
 
   **Index (0-100%) for the        522070     --     40.32   35.62   15.82 
     severity of containment                                               
