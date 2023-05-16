@@ -19,6 +19,33 @@ table_NA_D4_Date <- readRDS(file = "tables/analysis/table_NA_D4_Date.RDS")
 table_Obs_D5_Date <- readRDS(file = "tables/analysis/table_Obs_D5_Date.RDS")
 table_NA_D5_Date <- readRDS(file = "tables/analysis/table_NA_D5_Date.RDS")
 table_Obs_region_agg_Date_weekly <- readRDS(file = "tables/analysis/table_Obs_region_agg_Date_weekly.RDS")
+
+# Function to plot count, mean in boxplot; source:
+# https://gscheithauer.medium.com/how-to-add-number-of-observations-to-a-ggplot2-boxplot-b22710f7ef80
+stat_box_data <- function(x, upper_limit = 75) {
+    return( 
+        data.frame(
+            y = 0.95 * upper_limit,
+            label = paste('count =', 
+                          format(length(x), big.mark = ",", decimal.mark = ".", scientific = FALSE), 
+                          '\n',
+                          'mean =', 
+                          format(round(mean(x), 1), big.mark = ",", decimal.mark = ".", scientific = FALSE))
+        )
+    )
+}
+stat_box_data_115 <- function(x, upper_limit = 115) {
+    return( 
+        data.frame(
+            y = 0.95 * upper_limit,
+            label = paste('count =', 
+                          format(length(x), big.mark = ",", decimal.mark = ".", scientific = FALSE), 
+                          '\n',
+                          'mean =', 
+                          format(round(mean(x), 1), big.mark = ",", decimal.mark = ".", scientific = FALSE))
+        )
+    )
+}
 ```
 
 ## Analysis of Corona data from Germany
@@ -147,11 +174,11 @@ CTIS_microdata <- readRDS(file = "data/protected_data/CTIS_microdata.RDS")
 # Spearman rank correlation coefficient of D1, D2: 0.6060078
 cor(as.numeric(CTIS_microdata$D1), as.numeric(CTIS_microdata$D2), use="pairwise.complete.obs", method = "spearman")
 
-# Save the crosstable of D1 and D2 as a PDF file
-cross_table_D1_D2 <- table(CTIS_microdata$D1, CTIS_microdata$D2)
-pdf("tables/cross_tables/cross_table_D1_D2.pdf", height=4, width=10)
-grid.table(cross_table_D1_D2)
-dev.off()
+# # Save the crosstable of D1 and D2 as a PDF file
+# cross_table_D1_D2 <- table(CTIS_microdata$D1, CTIS_microdata$D2)
+# pdf("tables/cross_tables/cross_table_D1_D2.pdf", height=4, width=10)
+# grid.table(cross_table_D1_D2)
+# dev.off()
 
 
 # Plots with table data: 
@@ -210,6 +237,12 @@ micro_restr <- readRDS(file = "data/protected_data/micro_restr.RDS")
 ggplot(data = micro_restr %>% select(D1, bl_mn_idx_t) %>% drop_na(), 
        mapping = aes(x = D1, y = bl_mn_idx_t)) +
   geom_boxplot() +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
   labs(title = "D1 (anxious) vs. German restriction index",
        x = "D1 (anxious)",
        y = "Measures index federal states per day (in %)")
@@ -217,8 +250,14 @@ ggsave("Plots/micro_restrictions/D1_restr_boxplot.png", width = 12, height = 9)
 
 # Plot: D1 vs German restriction index vs E4
 ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t) %>% drop_na(), 
-       mapping = aes(x = D1, y = bl_mn_idx_t, color = E4)) +
-    geom_boxplot() +
+       mapping = aes(x = D1, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E4)) +
     labs(title = "D1 (anxious) vs. German restriction index vs. age group",
          x = "D1 (anxious)",
          y = "Measures index federal states per day (in %)") + 
@@ -227,18 +266,30 @@ ggsave("Plots/micro_restrictions/D1_restr_E4_boxplot.png", width = 12, height = 
 
 # Plot: D1 vs German restriction index vs E8
 ggplot(data = micro_restr %>% select(D1, E8, bl_mn_idx_t) %>% drop_na(), 
-       mapping = aes(x = D1, y = bl_mn_idx_t, color = E8)) +
-    geom_boxplot() +
+       mapping = aes(x = D1, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E8)) +
     labs(title = "D1 (anxious) vs. German restriction index vs. education-level",
          x = "D1 (anxious)",
          y = "Measures index federal states per day (in %)") + 
     scale_color_brewer(palette = "Blues", name = "E8 (education-level)")
-ggsave("Plots/micro_restrictions/D1_restr_E8_boxplot.png", width = 12, height = 5)
+ggsave("Plots/micro_restrictions/D1_restr_E8_boxplot.png", width = 12, height = 6)
 
 # Plot: D1 vs German restriction index vs E2
 ggplot(data = micro_restr %>% select(D1, E2, bl_mn_idx_t) %>% drop_na(), 
-       mapping = aes(x = D1, y = bl_mn_idx_t, color = E2)) +
-    geom_boxplot() +
+       mapping = aes(x = D1, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E2)) +
     labs(title = "D1 (anxious) vs. German restriction index vs. area of living",
          x = "D1 (anxious)",
          y = "Measures index federal states per day (in %)") + 
@@ -247,29 +298,48 @@ ggsave("Plots/micro_restrictions/D1_restr_E2_boxplot.png", width = 12, height = 
 
 # Plot: D1 vs German restriction index vs E3
 ggplot(data = micro_restr %>% select(D1, E3, bl_mn_idx_t) %>% drop_na(), 
-       mapping = aes(x = D1, y = bl_mn_idx_t, color = E3)) +
-    geom_boxplot() +
+       mapping = aes(x = D1, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E3)) +
     labs(title = "D1 (anxious) vs. German restriction index vs. gender",
          x = "D1 (anxious)",
          y = "Measures index federal states per day (in %)") + 
     scale_color_brewer(palette = "Dark2", name = "E3 (gender)")
 ggsave("Plots/micro_restrictions/D1_restr_E3_boxplot.png", width = 12, height = 6)
 
-# Plot: G1 vs German restriction index
-ggplot(data = micro_restr %>% select(G1, bl_mn_idx_t) %>% drop_na(), 
-       mapping = aes(x = G1, y = bl_mn_idx_t)) +
-  geom_boxplot() +
-  labs(title = "G1 (worried catching covid) vs. German restriction index",
-       x = "G1 (worried catching covid)",
-       y = "Measures index federal states per day (in %)")
-ggsave("Plots/micro_restrictions/G1_restr_boxplot.png", width = 12, height = 9)
+# Plot: D1 vs German restriction index vs D7a
+ggplot(data = micro_restr %>% select(D1, D7a, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D1, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = D7a)) +
+    labs(title = "D1 (anxious) vs. German restriction index vs. paid work",
+         x = "D1 (anxious)",
+         y = "Measures index federal states per day (in %)") + 
+    scale_color_brewer(palette = "Dark2", name = "D7a (paid work?)")
+ggsave("Plots/micro_restrictions/D1_restr_D7a_boxplot.png", width = 12, height = 6)
 
 # German restriction index (Mask obligation) -------------------------------------------------------
 
 # Plot: D1 vs German restriction index (Mask obligation) vs E4
 ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t_m16) %>% drop_na(), 
-       mapping = aes(x = D1, y = bl_mn_idx_t_m16, color = E4)) +
-    geom_boxplot() +
+       mapping = aes(x = D1, y = bl_mn_idx_t_m16)) +
+  stat_summary(
+    fun.data = stat_box_data_115, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E4)) +
     labs(title = "D1 (anxious) vs. German restriction index (Mask obligation) vs. age group",
          x = "D1 (anxious)",
          y = "Measures index (Mask obligation) federal states per day (in %)") + 
