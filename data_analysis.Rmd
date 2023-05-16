@@ -274,7 +274,7 @@ ggplot(data = table_D1_Date, mapping = aes(x = RecordedDate, y = perc)) +
        x = "Date", 
        y = "Relative frequencies",
        color = "D1 (anxious)")
-ggsave("Plots/Chris/table_data/D1_vs_RecordedDate_lineplot.png", width = 12, height = 6)
+ggsave("Plots/microdata/D1_vs_RecordedDate_lineplot.png", width = 12, height = 6)
 
 
 # D2 --------------------------------------------------------------------------------------------------------
@@ -322,7 +322,7 @@ ggplot(data = table_D2_Date, mapping = aes(x = RecordedDate, y = perc)) +
        x = "Date",
        y = "Relative frequencies",
        color = "D2 (depressed)")
-ggsave("Plots/Chris/table_data/D2_vs_RecordedDate_lineplot.png", width = 12, height = 6)
+ggsave("Plots/microdata/D2_vs_RecordedDate_lineplot.png", width = 12, height = 6)
 
 # Plots without table data -------------------------------------------------------------------
 
