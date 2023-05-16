@@ -243,7 +243,8 @@ levels(CTIS_microdata_raw$D7a) <- list(
 )
 
 # Filter dates until June 12, 2022 because of survey end
-CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(RecordedDate < as.Date("2022-06-26"))
+CTIS_microdata_raw <- CTIS_microdata_raw %>% filter(RecordedDate < as.Date("2022-06-26"),
+                                                    RecordedDate > as.Date("2020-12-31"))
 
 # Recoding from 0 to 1 of the variable E5 („How many people slept in the place where you stayed last night 
 # (including yourself)”)
@@ -261,7 +262,7 @@ CTIS_microdata_raw$region_agg <-
   factor(CTIS_microdata_raw$region_agg,levels(CTIS_microdata_raw$region_agg)[order(as.vector(levels(CTIS_microdata_raw$region_agg)))])
 
 # Final filter for model parameters
-CTIS_microdata_raw <- CTIS_microdata_raw %>% drop_na(E4, E3, E8, E2)
+CTIS_microdata_raw <- CTIS_microdata_raw %>% drop_na(D1, D2, E4, E3, E8, E2, E5, E7a, D7a)
 
 saveRDS(object = CTIS_microdata_raw, file = "data/protected_data/CTIS_microdata.RDS")
 ```

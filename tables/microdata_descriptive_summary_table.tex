@@ -1,0 +1,174 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Descriptive summary table},
+  pdfauthor={Christian Hobelsberger},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Descriptive summary table}
+\author{Christian Hobelsberger}
+\date{2023-05-16}
+
+\begin{document}
+\maketitle
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.4400}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1200}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1200}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1067}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1067}}
+  >{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1067}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\centering
+Variables
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+N
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\%
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Med
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+IQR
+\end{minipage} \\
+\midrule()
+\endhead
+\textbf{During the past 7 days, how often did you feel so nervous that
+nothing could calm you down? (D1)} & 525605 & 69.46 & -- & -- & 1 \\
+\emph{None of the time} & 365108 & 15.81 & -- & -- & 0 \\
+\emph{A little of the time} & 83105 & 11.17 & -- & -- & 0 \\
+\emph{Some of the time} & 58726 & 2.439 & -- & -- & 0 \\
+\emph{Most of the time} & 12821 & 1.112 & -- & -- & 0 \\
+\emph{All the time} & 5845 & 525605 & -- & -- & 0 \\
+\textbf{During the past 7 days, how often did you feel so depressed that
+nothing could cheer you up? (D2)} & 525605 & 58.6 & -- & -- & 1 \\
+\emph{None of the time} & 307998 & 18.08 & -- & -- & 0 \\
+\emph{A little of the time} & 95013 & 16.19 & -- & -- & 0 \\
+\emph{Some of the time} & 85108 & 4.899 & -- & -- & 0 \\
+\emph{Most of the time} & 25752 & 2.232 & -- & -- & 0 \\
+\emph{All the time} & 11734 & 525605 & -- & -- & 0 \\
+\textbf{What is your age?} & 525605 & 3.895 & -- & -- & 2 \\
+\emph{18-24} & 20472 & 17.35 & -- & -- & 0 \\
+\emph{25-34} & 91190 & 23.82 & -- & -- & 0 \\
+\emph{35-44} & 125206 & 22.8 & -- & -- & 0 \\
+\emph{45-54} & 119855 & 20.25 & -- & -- & 0 \\
+\emph{55-64} & 106413 & 9.684 & -- & -- & 0 \\
+\emph{65-74} & 50899 & 2.201 & -- & -- & 0 \\
+\emph{75+} & 11570 & 525605 & -- & -- & 0 \\
+\textbf{What is your gender?} & 525605 & 43.46 & -- & -- & 1 \\
+\emph{Male} & 228404 & 55.69 & -- & -- & 0 \\
+\emph{Female} & 292686 & 0.2882 & -- & -- & 0 \\
+\emph{Other} & 1515 & 0.5708 & -- & -- & 0 \\
+\emph{Prefer not to answer} & 3000 & 525605 & -- & -- & 0 \\
+\textbf{What is the highest level of education that you have completed?}
+& 525605 & 0.3428 & -- & -- & 2 \\
+\emph{No formal schooling} & 1802 & 0.7386 & -- & -- & 0 \\
+\emph{Less than primary school} & 3882 & 4.302 & -- & -- & 0 \\
+\emph{Primary school completed} & 22611 & 32.25 & -- & -- & 0 \\
+\emph{Secondary school complete} & 169503 & 31.82 & -- & -- & 0 \\
+\emph{High school (or equivalent) completed} & 167241 & 20.61 & -- & --
+& 0 \\
+\emph{College/ pre-university/ University completed} & 108301 & 9.944 &
+-- & -- & 0 \\
+\emph{University post-graduate degree completed} & 52265 & 525605 & -- &
+-- & 0 \\
+\textbf{Which of these best describes the area where you are currently
+staying?} & 525605 & 38.64 & -- & -- & 2 \\
+\emph{City} & 203070 & 28.27 & -- & -- & 0 \\
+\emph{Town} & 148583 & 33.1 & -- & -- & 0 \\
+\emph{Village or rural area} & 173952 & 525605 & -- & -- & 0 \\
+\textbf{How many people slept in the place where you stayed last night
+(including yourself)?} & 525605 & -- & 2 & 2.555 & 2 \\
+\textbf{How many rooms are used for sleeping in the place where you are
+staying?} & 525605 & -- & 2 & 1.976 & 2 \\
+\textbf{In the past 4 weeks, did you do any work for pay?} & 525605 &
+72.1 & -- & -- & 1 \\
+\emph{Yes} & 378987 & 27.9 & -- & -- & 0 \\
+\emph{No} & 146618 & 525605 & -- & -- & 0 \\
+\textbf{Index (0-100\%) for the severity of containment measures imposed
+per day: General} & 525605 & -- & 40.32 & 35.64 & 15.82 \\
+\textbf{Index (0-100) for the severity of containment measures
+prescribed per day: Secondary schools} & 525605 & -- & 40.6 & 39.68 &
+39.6 \\
+\textbf{Index (0-100) for the severity of containment measures
+prescribed per day: Elementary Schools} & 525605 & -- & 40.6 & 36.59 &
+19.8 \\
+\textbf{Index (0-100) for the severity of containment measures
+prescribed per day: Daycare centers} & 525605 & -- & 20.8 & 29.42 &
+19.8 \\
+\textbf{Index (0-100) for the severity of containment measures
+prescribed per day: Mask obligation} & 525605 & -- & 56 & 51.16 & 22 \\
+\bottomrule()
+\end{longtable}
+
+\end{document}
