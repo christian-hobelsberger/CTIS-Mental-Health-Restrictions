@@ -78,7 +78,7 @@ output:
 
 *All the time*                    11620    2.226     --      --       --  
 
-     **What is your age?**        522070    --       --      --       --   
+     **What is your age? (E4)**   522070    --       --      --       --   
 
  *18-24*                          20251    3.879     --      --       --  
 
@@ -94,7 +94,7 @@ output:
 
   *75+*                           11505    2.204     --      --       --  
 
-    **What is your gender?**      522070    --       --      --       --   
+    **What is your gender? (E3)** 522070    --       --      --       --   
 
    *Male*                         226811   43.44     --      --       --  
 
@@ -106,7 +106,7 @@ output:
 
  **What is the highest level of   522070    --       --      --       --   
     education that you have                                               
-          completed?**                                                    
+          completed? (E8)**                                               
 
  *No formal schooling*             1784    0.3417    --      --       --  
 
@@ -129,7 +129,7 @@ equivalent) completed*
 
      **Which of these best        522070   --       --      --       --   
   describes the area where you                                            
-    are currently staying?**                                              
+    are currently staying? (E2)**                                              
 
 *City*                            201459   38.59     --      --       --  
                                                       
@@ -139,7 +139,7 @@ equivalent) completed*
 *Village or rural area*           173048   33.15     --      --       --
 
  **In the past 4 weeks, did you   522070    --       --      --       --      
-     do any work for pay?**                                               
+     do any work for pay? (D7a)**                                               
 
 *Yes*                             376772   72.17     --      --       --  
 
@@ -152,34 +152,40 @@ equivalent) completed*
 -------------------------------- -------- -------- ------- ------- -------
 **How many people slept in the    522070     --       2     2.555     2
   place where you stayed last                                             
-  night (including yourself)?**                                             
+  night (including yourself)?
+  (E5)**                                             
 
 **How many rooms are used for     522070     --       2     1.975     2 
   sleeping in the place where                                             
-        you are staying?**                                                  
+        you are staying? (E7a)**                                                  
 
   **Index (0-100%) for the        522070     --     40.32   35.62   15.82 
     severity of containment                                               
    measures imposed per day:                                              
-            General**                                                       
+            General
+            (bl_mn_idx_t)**                                                       
 
 **Index (0-100) for the severity  522070     --     40.6    39.71   39.6  
     of containment measures                                               
  prescribed per day: Secondary                                            
-            schools**                                                       
+            schools
+            (bl_mn_idx_t_m02a)**                                                       
 
 **Index (0-100) for the severity  522070     --     40.6    36.6    19.8  
     of containment measures                                               
  prescribed per day: Elementary                                           
-            Schools**                                                       
+            Schools
+            (bl_mn_idx_t_m02b)**                                                       
 
 **Index (0-100) for the severity  522070     --     20.8    29.45   19.8    
     of containment measures                                               
   prescribed per day: Daycare                                             
-            centers**                                                       
+            centers
+            (bl_mn_idx_t_m3)**                                                       
 
 **Index (0-100) for the severity  522070     --      56     51.16    22   
     of containment measures                                               
     prescribed per day: Mask                                              
-           obligation**                                                     
+           obligation
+           (bl_mn_idx_t_m16)**                                                     
 --------------------------------------------------------------------------
