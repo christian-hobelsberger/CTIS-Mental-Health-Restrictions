@@ -194,10 +194,6 @@ chisq.test(table(CTIS_microdata$D1, CTIS_microdata$D2))
 # 
 # knitr::kable(x = cross_table_D1_D2, format = "latex") %>%
 #   kableExtra::add_header_above(c("D1 (anxious)" = 1, "D2 (depressed)" = 5))
-# 
-# pdf("tables/cross_tables/cross_table_D1_D2.pdf", height=4, width=10)
-# grid.table(cross_table_D1_D2)
-# dev.off()
 
 
 # Plots with table data: 
@@ -691,5 +687,27 @@ D2_vs_weekday_abs <- ggplot(data = table_D2_weekday, mapping = aes(x = day_of_we
 ggarrange(D1_vs_weekday_abs, D2_vs_weekday_abs, ncol = 1, nrow = 2,
           labels = c("A", "B", "C", "D"))
 ggsave("Plots/paper/arranged_D1_D2_vs_weekday_abs.png", width = 12, height = 9)
+
+## -----------
+
+# Plot: Observations region_agg (federal state)
+ggplot(data = CTIS_microdata, mapping = aes(x = region_agg)) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = "Number of observations per federal state",
+       x = "Federal state",
+       y = "Number of Observations") +
+  geom_text(stat="count", aes(label=..count..),
+            hjust=0, size=5) +
+  theme(text = element_text(size = 15))
+ggsave("Plots/paper/Obs_region_agg_barplot.png", width = 12, height = 9)
+
+## -----------
+
+# Save the crosstable of D1 and D2 as a latex code
+cross_table_D1_D2 <- table(CTIS_microdata$D1, CTIS_microdata$D2)
+
+knitr::kable(x = cross_table_D1_D2, format = "latex") %>%
+  kableExtra::add_header_above(c("D1 (anxious)" = 1, "D2 (depressed)" = 5))
 ```
 
