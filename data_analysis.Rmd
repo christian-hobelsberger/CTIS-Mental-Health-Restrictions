@@ -6,10 +6,11 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-library(gridExtra)
 # install.packages(c("kableExtra", "flextable", "ggpubr"))
+library(gridExtra)
 library(ggpubr)
 library(tidyverse)
+theme_set(theme_bw())
 
 # Read tables from data_analysis_prep_tables.R
 table_Obs_D1_Date <- readRDS(file = "tables/analysis/table_Obs_D1_Date.RDS")
@@ -579,18 +580,33 @@ CTIS_microdata <- readRDS(file = "data/protected_data/CTIS_microdata.RDS")
 # Read microdata with restriction data
 micro_restr <- readRDS(file = "data/protected_data/micro_restr.RDS")
 
-# Plot: Observations D1 (anxious) over time
+# Read gernab restriction data
+bl_massnahmen_index_tag <- readRDS(file = "data/protected_data/bl_massnahmen_index_tag.RDS")
+
+  
+
+# Plot: German restriction index over time for Bavaria 
+ggplot(data = filter(bl_massnahmen_index_tag, bundesland == "Bayern"), 
+       mapping = aes(x = datum, y = bl_mn_idx_t)) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
+  geom_line()  +
+  labs(title = "German measures index over time for Bavaria",
+       x = "Date",
+       y = "Measures index federal states per day (in %)")
+ggsave(filename = "Plots/german_restrictions/measures_date_bavaria.png", width = 12, height = 9)
+
+# Plot: Observations D1 (anxiety) over time
 Obs_RecordedDate_D1_lineplot <- ggplot(data = table_Obs_D1_Date, mapping = aes(x = RecordedDate, y = count)) +
   geom_line() +
-  labs(title = "Number of observations D1 (anxious) over time",
+  labs(title = "Number of observations D1 (anxiety) over time",
        x = "Date",
        y = "Number of daily observations") +
   ylim(0, 2000) +
   theme(text = element_text(size = 15)) 
-# Plot: Observations D2 (depressed) over time
+# Plot: Observations D2 (depression) over time
 Obs_RecordedDate_D2_lineplot <- ggplot(data = table_Obs_D2_Date, mapping = aes(x = RecordedDate, y = count)) +
   geom_line() +
-  labs(title = "Number of observations D2 (depressed) over time",
+  labs(title = "Number of observations D2 (depression) over time",
        x = "Date",
        y = "Number of daily observations") +
   ylim(0, 2000) +
@@ -607,21 +623,21 @@ print(table_Obs_D1_Date %>% arrange(count), n = 20)
 
 ## -----------
 
-# Plot D1 (anxious) vs RecordedDate
+# Plot D1 (anxiety) vs RecordedDate
 D1_vs_RecordedDate_lineplot <- ggplot(data = table_D1_Date, mapping = aes(x = RecordedDate, y = perc)) +
   geom_line(mapping = aes(color = D1)) +
-  labs(title = "Relative frequencies of D1 (anxious) over time",
+  labs(title = "Relative frequencies of D1 (anxiety) over time",
        x = "Date", 
        y = "Relative frequency",
-       color = "D1 (anxious)") +
+       color = "D1 (anxiety)") +
   theme(text = element_text(size = 15), axis.text.x = element_text(vjust = 1, hjust = 0.75)) 
-# Plot D2 (depressed) vs RecordedDate
+# Plot D2 (depression) vs RecordedDate
 D2_vs_RecordedDate_lineplot <- ggplot(data = table_D2_Date, mapping = aes(x = RecordedDate, y = perc)) +
   geom_line(mapping = aes(color = D2)) +
-  labs(title = "Relative frequencies of D2 (depressed) over time",
+  labs(title = "Relative frequencies of D2 (depression) over time",
        x = "Date",
        y = "Relative frequency",
-       color = "D2 (depressed)") +
+       color = "D2 (depression)") +
   theme(text = element_text(size = 15), axis.text.x = element_text(vjust = 1, hjust = 0.75)) 
 
 ggarrange(D1_vs_RecordedDate_lineplot, D2_vs_RecordedDate_lineplot, ncol = 1, nrow = 2,
@@ -634,28 +650,28 @@ table_D2_Date %>% ungroup() %>% group_by(D2) %>% summarise(mean(perc))
 
 ## -----------
 
-# Plot: D1 (anxious) category vs. weekdays - rel
+# Plot: D1 (anxiety) category vs. weekdays - rel
 D1_vs_weekday_category_rel <- ggplot(data = table_D1_weekday_per_D1, 
                                      mapping = aes(x = day_of_week, y = perc, fill = D1)) +
   geom_bar(position = "dodge", stat = "identity") +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  labs(title = "Relative frequency of D1 (anxious) per weekday", 
+  labs(title = "Relative frequency of D1 (anxiety) per weekday", 
        x = "Day of the week",
        y = "Relative frequency") + 
-  scale_fill_brewer(palette = "Blues", name = "D1 (anxious)") +
+  scale_fill_brewer(palette = "Blues", name = "D1 (anxiety)") +
   geom_text(aes(label=round(perc, 2)),
             position=position_dodge(width=0.9),
             vjust=-0.2, size=3.75) +
   theme(text = element_text(size = 15))
-# Plot: D2 (depressed) category vs. weekdays - rel
+# Plot: D2 (depression) category vs. weekdays - rel
 D2_vs_weekday_category_rel <- ggplot(data = table_D2_weekday_per_D2, 
                                      mapping = aes(x = day_of_week, y = perc, fill = D2)) +
   geom_bar( position = "dodge", stat = "identity") +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  labs(title = "Relative frequency of D2 (depressed) per weekday", 
+  labs(title = "Relative frequency of D2 (depression) per weekday", 
        x = "Day of the week",
        y = "Relative frequency") + 
-  scale_fill_brewer(palette = "Blues", name = "D2 (depressed)") +
+  scale_fill_brewer(palette = "Blues", name = "D2 (depression)") +
   geom_text(aes(label=round(perc, 2)),
             position=position_dodge(width=0.9),
             vjust=-0.2, size=3.75) +
@@ -667,18 +683,18 @@ ggsave("Plots/paper/arranged_D1_D2_vs_weekday_category_rel.png", width = 12, hei
 
 ## -----------
 
-# Plot: D1 (anxious) vs. weekdays - abs
+# Plot: D1 (anxiety) vs. weekdays - abs
 D1_vs_weekday_abs <- ggplot(data = table_D1_weekday, mapping = aes(x = day_of_week, y = n)) +
   geom_bar(stat = "identity") +
-  labs(title = "Number of Observations D1 (anxious) per weekdays", 
+  labs(title = "Number of Observations D1 (anxiety) per weekdays", 
        x = "Day of the week",
        y = "Number of observations") +
   geom_text(aes(label = n), vjust = -0.25) +
   theme(text = element_text(size = 15))
-# Plot: D2 (depressed) vs. weekdays - abs
+# Plot: D2 (depression) vs. weekdays - abs
 D2_vs_weekday_abs <- ggplot(data = table_D2_weekday, mapping = aes(x = day_of_week, y = n)) +
   geom_bar(stat = "identity") +
-  labs(title = "Number of Observations D2 (depressed) per weekdays", 
+  labs(title = "Number of Observations D2 (depression) per weekdays", 
        x = "Day of the week",
        y = "Number of observations") +
   geom_text(aes(label = n), vjust = -0.25) +
@@ -708,6 +724,57 @@ ggsave("Plots/paper/Obs_region_agg_barplot.png", width = 12, height = 9)
 cross_table_D1_D2 <- table(CTIS_microdata$D1, CTIS_microdata$D2)
 
 knitr::kable(x = cross_table_D1_D2, format = "latex") %>%
-  kableExtra::add_header_above(c("D1 (anxious)" = 1, "D2 (depressed)" = 5))
+  kableExtra::add_header_above(c("D1 (anxiety)" = 1, "D2 (depression)" = 5))
+
+## -----------
+
+bl_massnahmen_index_tag$alpha_values <- ifelse(bl_massnahmen_index_tag$included_in_study, 1, 0.8)
+# Plot: German restriction index over time by federal state 
+ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t, color = bundesland)) +
+  geom_line(aes(alpha = alpha_values)) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
+  labs(x = "Date",
+       y = "General containment measures index (in %)",
+       color = "Federal state") +
+    scale_alpha_continuous(guide=FALSE) +
+  theme(text = element_text(size = 15))
+ggsave(filename = "Plots/paper/gen_measures_date.png", width = 12, height = 6)
+
+bl_massnahmen_index_tag %>% 
+  filter(included_in_study) %>%
+  arrange(desc(bl_mn_idx_t))
+
+bl_massnahmen_index_tag %>% 
+  filter(included_in_study) %>%
+  arrange(bl_mn_idx_t)
+
+bl_massnahmen_index_tag %>% 
+  filter(included_in_study) %>%
+  ungroup() %>% 
+  group_by(datum) %>% 
+  summarise(min_bl_mn_idx_t = min(bl_mn_idx_t), max_bl_mn_idx_t = max(bl_mn_idx_t),
+            diff_bl_mn_idx_t = max_bl_mn_idx_t - min_bl_mn_idx_t) %>%
+  arrange(diff_bl_mn_idx_t)
+
+bl_massnahmen_index_tag %>% 
+  filter(included_in_study) %>%
+  ungroup() %>% 
+  group_by(datum) %>% 
+  summarise(min_bl_mn_idx_t = min(bl_mn_idx_t), max_bl_mn_idx_t = max(bl_mn_idx_t),
+            diff_bl_mn_idx_t = max_bl_mn_idx_t - min_bl_mn_idx_t) %>%
+  arrange(desc(diff_bl_mn_idx_t))
+
+## -----------
+
+# Plot: German restriction index over time for Bavaria 
+ggplot(data = filter(bl_massnahmen_index_tag, bundesland == "Bayern"), 
+       mapping = aes(x = datum, y = bl_mn_idx_t)) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
+  geom_line(aes(alpha = alpha_values))  +
+  labs(x = "Date",
+       y = "General containment measures index (in %)") +
+    scale_alpha_continuous(guide=FALSE) +
+  theme(text = element_text(size = 15))
+ggsave(filename = "Plots/paper/gen_measures_date_bavaria.png", width = 12, height = 6)
 ```
 

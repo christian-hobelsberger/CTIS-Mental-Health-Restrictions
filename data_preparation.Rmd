@@ -55,6 +55,8 @@ bl_massnahmen_index_tag <- transform(bl_massnahmen_index_tag,
 # Adjust regional-levels to match CTIS data
 levels(bl_massnahmen_index_tag$bundesland)[5] <- "Bayern"
 
+bl_massnahmen_index_tag$included_in_study <- bl_massnahmen_index_tag$datum >= as.Date("2021-05-20") & bl_massnahmen_index_tag$datum <= as.Date("2022-06-25")
+
 saveRDS(object = bl_massnahmen_index_tag, file = "data/protected_data/bl_massnahmen_index_tag.RDS")
 
 
