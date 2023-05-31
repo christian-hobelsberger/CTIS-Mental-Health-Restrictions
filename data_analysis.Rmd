@@ -746,7 +746,7 @@ ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t,
   geom_line(aes(alpha = alpha_values)) +
   geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
   labs(x = "Date",
-       y = "General containment measures index (in %)",
+       y = "General containment measures index",
        color = "Federal state") +
     scale_alpha_continuous(guide="none") +
   theme(text = element_text(size = 15))
@@ -784,7 +784,7 @@ ggplot(data = filter(bl_massnahmen_index_tag, bundesland == "Bayern"),
   geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
   geom_line(aes(alpha = alpha_values))  +
   labs(x = "Date",
-       y = "General containment measures index (in %)") +
+       y = "General containment measures index") +
     scale_alpha_continuous(guide="none") +
   theme(text = element_text(size = 15))
 ggsave(filename = "Plots/paper/gen_measures_date_bavaria.png", width = 12, height = 6)
@@ -799,7 +799,7 @@ measures_daycare_date <- ggplot(data = bl_massnahmen_index_tag,
   geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
   labs(title = "German daycare centers measures index\nover time per federal states",
        x = "Date",
-       y = "German daycare centers measures\nindex (in %)",
+       y = "Daycare centers measures\nindex",
        color = "Federal state") +
     scale_alpha_continuous(guide="none") +
   theme(text = element_text(size = 15))
@@ -811,7 +811,7 @@ measures_sec_schools_date <- ggplot(data = bl_massnahmen_index_tag,
   geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
   labs(title = "German secondary schools measures index\nover time per federal states",
        x = "Date",
-       y = "German secondary schools measures\nindex (in %)",
+       y = "Secondary schools measures\nindex",
        color = "Federal state") +
     scale_alpha_continuous(guide="none") +
   theme(text = element_text(size = 15))
@@ -821,9 +821,9 @@ measures_elem_schools_date <- ggplot(data = bl_massnahmen_index_tag,
                                      mapping = aes(x = datum, y = bl_mn_idx_t_m02b, color = bundesland)) +
   geom_line(aes(alpha = alpha_values)) +
   geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
-  labs(title = "German elementary schools measures index\nover time per federal states",
+  labs(title = "Elementary schools measures index\nover time per federal states",
        x = "Date",
-       y = "German elementary schools measures\nindex (in %)",
+       y = "German elementary schools measures\nindex",
        color = "Federal state") +
     scale_alpha_continuous(guide="none") +
   theme(text = element_text(size = 15))
@@ -833,9 +833,9 @@ measures_maks_date <- ggplot(data = bl_massnahmen_index_tag,
                              mapping = aes(x = datum, y = bl_mn_idx_t_m16, color = bundesland)) +
   geom_line(aes(alpha = alpha_values)) +
   geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
-  labs(title = "German mask obligation index\nover time per federal states",
+  labs(title = "Mask obligation index\nover time per federal states",
        x = "Date",
-       y = "German mask obligation\nindex (in %)",
+       y = "German mask obligation\nindex",
        color = "Federal state") +
     scale_alpha_continuous(guide="none") +
   theme(text = element_text(size = 15))
@@ -863,7 +863,7 @@ D1_restr_boxplot <- ggplot(data = micro_restr %>% select(D1, bl_mn_idx_t) %>% dr
   ) +
   labs(title = "Relationship between D1 (anxiety) and the german general containment measures",
        x = "D1 (anxiety)",
-       y = "German general containment\nmeasures (in %)") +
+       y = "General containment\nmeasures index") +
   theme(text = element_text(size = 15))
 
 # Plot: D2 vs German restriction index
@@ -878,7 +878,7 @@ D2_restr_boxplot <- ggplot(data = micro_restr %>% select(D2, bl_mn_idx_t) %>% dr
   ) +
   labs(title = "Relationship between D2 (depression) and the german general containment measures",
        x = "D2 (depressed)",
-       y = "German general containment\nmeasures (in %)") +
+       y = "General containment\nmeasures index") +
   theme(text = element_text(size = 15))
 
 ggarrange(D1_restr_boxplot, D2_restr_boxplot, ncol = 1, nrow = 2,
@@ -887,16 +887,101 @@ ggsave("Plots/paper/arranged_gen_measures_D1_D2.png", width = 12, height = 9)
 
 micro_restr %>%
   group_by(D1) %>%
-  summarise(mean(bl_mn_idx_t),
+  summarise(n(),
+            mean(bl_mn_idx_t),
             median(bl_mn_idx_t),
             quantile(bl_mn_idx_t, .25),
             quantile(bl_mn_idx_t, .75))
 
 micro_restr %>%
   group_by(D2) %>%
-  summarise(mean(bl_mn_idx_t),
+  summarise(n(),
+            mean(bl_mn_idx_t),
             median(bl_mn_idx_t),
             quantile(bl_mn_idx_t, .25),
             quantile(bl_mn_idx_t, .75))
+
+## -----------
+
+# Plot: D1 vs German restriction index vs E4
+D1_restr_E4_boxplot <- ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D1, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E4)) +
+    labs(title = "Relationship between D1 (anxiety) and the german general containment measures per age group",
+         x = "D1 (anxious)",
+         y = "General containment measures index") + 
+    scale_color_brewer(palette = "Blues", name = "E4 (age group)") +
+  theme(text = element_text(size = 15)) +
+  theme_gray()
+
+# Plot: D2 vs German restriction index vs E4
+D2_restr_E4_boxplot <- ggplot(data = micro_restr %>% select(D2, E4, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D2, y = bl_mn_idx_t)) +
+  stat_summary(
+    fun.data = stat_box_data, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+    geom_boxplot(aes(color = E4)) +
+    labs(title = "Relationship between D2 (depression) and the german general containment measures per age group",
+         x = "D2 (depressed)",
+         y = "General containment measures index") + 
+    scale_color_brewer(palette = "Blues", name = "E4 (age group)") +
+  theme(text = element_text(size = 15)) +
+  theme_gray()
+
+ggarrange(D1_restr_E4_boxplot, D2_restr_E4_boxplot, ncol = 1, nrow = 2,
+          labels = c("A", "B", "C", "D"), common.legend = TRUE, legend = "bottom",
+          font.label=list(color="black",size=15))
+ggsave("Plots/paper/arranged_gen_measures_D1_D2_E4.png", width = 12, height = 12)
+
+micro_restr %>%
+  group_by(D1, E4) %>%
+  summarise(n(),
+            mean(bl_mn_idx_t),
+            median(bl_mn_idx_t),
+            quantile(bl_mn_idx_t, .25),
+            quantile(bl_mn_idx_t, .75))
+
+micro_restr %>%
+  group_by(D2, E4) %>%
+  summarise(n(),
+            mean(bl_mn_idx_t),
+            median(bl_mn_idx_t),
+            quantile(bl_mn_idx_t, .25),
+            quantile(bl_mn_idx_t, .75))
+
+## -----------
+
+micro_restr %>% select(D1, bl_mn_idx_t) %>% ungroup() %>%
+    group_by(bl_mn_idx_t, D1) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
+    geom_line()
+
+micro_restr %>% select(D1, bl_mn_idx_t) %>% ungroup() %>%
+    group_by(bl_mn_idx_t, D1) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
+    geom_line() +
+    geom_smooth()
+
+micro_restr %>% select(D1, bl_mn_idx_t, E4) %>% ungroup() %>%
+    group_by(bl_mn_idx_t, E4, D1) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
+    geom_line() +
+    geom_smooth() +
+    facet_wrap(~E4)
 ```
 
