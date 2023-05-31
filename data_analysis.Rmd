@@ -43,6 +43,18 @@ stat_box_data <- function(x, upper_limit = 75) {
         )
     )
 }
+stat_box_data_80 <- function(x, upper_limit = 80) {
+    return( 
+        data.frame(
+            y = 0.95 * upper_limit,
+            label = paste('count =', 
+                          format(length(x), big.mark = ",", decimal.mark = ".", scientific = FALSE), 
+                          '\n',
+                          'mean =', 
+                          format(round(mean(x), 1), big.mark = ",", decimal.mark = ".", scientific = FALSE))
+        )
+    )
+}
 stat_box_data_115 <- function(x, upper_limit = 115) {
     return( 
         data.frame(
@@ -736,7 +748,7 @@ ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t,
   labs(x = "Date",
        y = "General containment measures index (in %)",
        color = "Federal state") +
-    scale_alpha_continuous(guide=FALSE) +
+    scale_alpha_continuous(guide="none") +
   theme(text = element_text(size = 15))
 ggsave(filename = "Plots/paper/gen_measures_date.png", width = 12, height = 6)
 
@@ -773,8 +785,118 @@ ggplot(data = filter(bl_massnahmen_index_tag, bundesland == "Bayern"),
   geom_line(aes(alpha = alpha_values))  +
   labs(x = "Date",
        y = "General containment measures index (in %)") +
-    scale_alpha_continuous(guide=FALSE) +
+    scale_alpha_continuous(guide="none") +
   theme(text = element_text(size = 15))
 ggsave(filename = "Plots/paper/gen_measures_date_bavaria.png", width = 12, height = 6)
+
+## -----------
+
+bl_massnahmen_index_tag$alpha_values <- ifelse(bl_massnahmen_index_tag$included_in_study, 1, 0.8)
+# Plot: German restriction index (Daycare centers) over time by federal state 
+measures_daycare_date <- ggplot(data = bl_massnahmen_index_tag, 
+                                mapping = aes(x = datum, y = bl_mn_idx_t_m03, color = bundesland)) +
+  geom_line(aes(alpha = alpha_values)) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
+  labs(title = "German daycare centers measures index\nover time per federal states",
+       x = "Date",
+       y = "German daycare centers measures\nindex (in %)",
+       color = "Federal state") +
+    scale_alpha_continuous(guide="none") +
+  theme(text = element_text(size = 15))
+
+# Plot: German restriction index (Secondary schools) over time by federal state 
+measures_sec_schools_date <- ggplot(data = bl_massnahmen_index_tag, 
+                                    mapping = aes(x = datum, y = bl_mn_idx_t_m02a, color = bundesland)) +
+  geom_line(aes(alpha = alpha_values)) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
+  labs(title = "German secondary schools measures index\nover time per federal states",
+       x = "Date",
+       y = "German secondary schools measures\nindex (in %)",
+       color = "Federal state") +
+    scale_alpha_continuous(guide="none") +
+  theme(text = element_text(size = 15))
+
+# Plot: German restriction index (Elementary schools) over time by federal state 
+measures_elem_schools_date <- ggplot(data = bl_massnahmen_index_tag, 
+                                     mapping = aes(x = datum, y = bl_mn_idx_t_m02b, color = bundesland)) +
+  geom_line(aes(alpha = alpha_values)) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
+  labs(title = "German elementary schools measures index\nover time per federal states",
+       x = "Date",
+       y = "German elementary schools measures\nindex (in %)",
+       color = "Federal state") +
+    scale_alpha_continuous(guide="none") +
+  theme(text = element_text(size = 15))
+
+# Plot: German restriction index (Mask obligation) over time by federal state 
+measures_maks_date <- ggplot(data = bl_massnahmen_index_tag, 
+                             mapping = aes(x = datum, y = bl_mn_idx_t_m16, color = bundesland)) +
+  geom_line(aes(alpha = alpha_values)) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
+  labs(title = "German mask obligation index\nover time per federal states",
+       x = "Date",
+       y = "German mask obligation\nindex (in %)",
+       color = "Federal state") +
+    scale_alpha_continuous(guide="none") +
+  theme(text = element_text(size = 15))
+
+ggarrange(measures_daycare_date, measures_sec_schools_date, 
+          measures_elem_schools_date, measures_maks_date,
+          ncol = 2, nrow = 2,
+          labels = c("A", "B", "C", "D"), common.legend = TRUE, legend = "bottom",
+          font.label=list(color="black",size=15))
+ggsave("Plots/paper/arranged_other_indicies.png", width = 12, height = 15)
+
+unique(bl_massnahmen_index_tag$bl_mn_idx_t_m03)
+
+## -----------
+
+# Plot: D1 vs German restriction index
+D1_restr_boxplot <- ggplot(data = micro_restr %>% select(D1, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D1, y = bl_mn_idx_t)) +
+  geom_boxplot() +
+  stat_summary(
+    fun.data = stat_box_data_80, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+  labs(title = "Relationship between D1 (anxiety) and the german general containment measures",
+       x = "D1 (anxiety)",
+       y = "German general containment\nmeasures (in %)") +
+  theme(text = element_text(size = 15))
+
+# Plot: D2 vs German restriction index
+D2_restr_boxplot <- ggplot(data = micro_restr %>% select(D2, bl_mn_idx_t) %>% drop_na(), 
+       mapping = aes(x = D2, y = bl_mn_idx_t)) +
+  geom_boxplot() +
+  stat_summary(
+    fun.data = stat_box_data_80, 
+    geom = "text", 
+    hjust = 0.5,
+    vjust = 0.9
+  ) +
+  labs(title = "Relationship between D2 (depression) and the german general containment measures",
+       x = "D2 (depressed)",
+       y = "German general containment\nmeasures (in %)") +
+  theme(text = element_text(size = 15))
+
+ggarrange(D1_restr_boxplot, D2_restr_boxplot, ncol = 1, nrow = 2,
+          labels = c("A", "B", "C", "D"))
+ggsave("Plots/paper/arranged_gen_measures_D1_D2.png", width = 12, height = 9)
+
+micro_restr %>%
+  group_by(D1) %>%
+  summarise(mean(bl_mn_idx_t),
+            median(bl_mn_idx_t),
+            quantile(bl_mn_idx_t, .25),
+            quantile(bl_mn_idx_t, .75))
+
+micro_restr %>%
+  group_by(D2) %>%
+  summarise(mean(bl_mn_idx_t),
+            median(bl_mn_idx_t),
+            quantile(bl_mn_idx_t, .25),
+            quantile(bl_mn_idx_t, .75))
 ```
 
