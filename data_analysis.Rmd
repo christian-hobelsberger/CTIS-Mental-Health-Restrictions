@@ -970,8 +970,8 @@ D1_gen_restr_lineplot <- micro_restr %>% select(D1, bl_mn_idx_t) %>% ungroup() %
 
 # Plot: D2 vs German restriction index
 D2_gen_restr_lineplot <- micro_restr %>% select(D2, bl_mn_idx_t) %>% ungroup() %>%
-    group_by(bl_mn_idx_t, D2) %>%
     mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, D2) %>%
     summarise(n = n()) %>%
     mutate(perc = n/sum(n)) %>%
     ungroup() %>%
@@ -1000,17 +1000,229 @@ micro_restr %>% select(D1, bl_mn_idx_t, E4) %>% ungroup() %>%
     mutate(perc = n/sum(n)) %>%
     ungroup() %>%
     group_by(E4, bl_mn_idx_t) %>%
-    filter(all(n >= 5)) %>%
+    filter(all(n >= 3),
+           length(unique(D1)) == 5) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
     geom_line() +
     facet_wrap(~E4) +
-  labs(title = "Relative frequency of D1 (anxiety) categories across general containment measures index",
-       x = "General containment measures index",
+  labs(x = "General containment measures index",
        y = "Relative frequency",
        color = "D1 (anxiety)") +
   theme(text = element_text(size = 15),
         legend.position = "bottom")
+ggsave("Plots/paper/lineplot_D1_gen_measures_E4.png", width = 12, height = 12)
 
+## -----------
+
+# Plot: D2 vs German restriction index vs E4
+micro_restr %>% select(D2, bl_mn_idx_t, E4) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, E4, D2) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(E4, bl_mn_idx_t) %>%
+    filter(all(n >= 3),
+           length(unique(D2)) == 5) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
+    geom_line() +
+    facet_wrap(~E4) +
+  labs(x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D2 (depression)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
+ggsave("Plots/paper/lineplot_D2_gen_measures_E4.png", width = 12, height = 12)
+
+micro_restr %>% select(D2, bl_mn_idx_t, E4) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, E4, D2) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(E4, bl_mn_idx_t) %>%
+    filter(all(n >= 3),
+           length(unique(D2)) == 5) %>%
+  filter(E4 == "18-24", D2 == "Some of the time") %>%
+  arrange(desc(perc))
+
+## -----------
+
+# Plot: D1 vs German restriction index vs E8
+micro_restr %>% select(D1, bl_mn_idx_t, E8) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, E8, D1) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(E8, bl_mn_idx_t) %>%
+    filter(all(n >= 3),
+           length(unique(D1)) == 5) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
+    geom_line() +
+    facet_wrap(~E8) +
+  labs(x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D1 (anxiety)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
+ggsave("Plots/paper/lineplot_D1_gen_measures_E8.png", width = 12, height = 12)
+
+## -----------
+
+# Plot: D2 vs German restriction index vs E8
+micro_restr %>% select(D2, bl_mn_idx_t, E8) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, E8, D2) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(E8, bl_mn_idx_t) %>%
+    filter(all(n >= 3),
+           length(unique(D2)) == 5) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
+    geom_line() +
+    facet_wrap(~E8) +
+  labs(x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D2 (depression)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
+ggsave("Plots/paper/lineplot_D2_gen_measures_E8.png", width = 12, height = 12)
+
+
+## -----------
+
+# Plot: D1 vs German restriction index vs E3
+micro_restr %>% select(D1, bl_mn_idx_t, E3) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, E3, D1) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(E3, bl_mn_idx_t) %>%
+    filter(all(n >= 3),
+           length(unique(D1)) == 5) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
+    geom_line() +
+    facet_wrap(~E3) +
+  labs(x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D1 (anxiety)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
+ggsave("Plots/paper/lineplot_D1_gen_measures_E3.png", width = 12, height = 12)
+
+## -----------
+
+# Plot: D2 vs German restriction index vs E3
+micro_restr %>% select(D2, bl_mn_idx_t, E3) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, E3, D2) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(E3, bl_mn_idx_t) %>%
+    filter(all(n >= 3),
+           length(unique(D2)) == 5) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
+    geom_line() +
+    facet_wrap(~E3) +
+  labs(x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D2 (depression)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
+ggsave("Plots/paper/lineplot_D2_gen_measures_E3.png", width = 12, height = 12)
+
+
+## -----------
+
+# Plot: D1 vs German restriction index vs E2
+micro_restr %>% select(D1, bl_mn_idx_t, E2) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, E2, D1) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(E2, bl_mn_idx_t) %>%
+    filter(all(n >= 3),
+           length(unique(D1)) == 5) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
+    geom_line() +
+    facet_wrap(~E2) +
+  labs(x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D1 (anxiety)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
+ggsave("Plots/paper/lineplot_D1_gen_measures_E2.png", width = 12, height = 12)
+
+## -----------
+
+# Plot: D2 vs German restriction index vs E2
+micro_restr %>% select(D2, bl_mn_idx_t, E2) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, E2, D2) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(E2, bl_mn_idx_t) %>%
+    filter(all(n >= 3),
+           length(unique(D2)) == 5) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
+    geom_line() +
+    facet_wrap(~E2) +
+  labs(x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D2 (depression)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
+ggsave("Plots/paper/lineplot_D2_gen_measures_E2.png", width = 12, height = 12)
+
+## -----------
+
+# Plot: D1 vs German restriction index vs D7a
+micro_restr %>% select(D1, bl_mn_idx_t, D7a) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, D7a, D1) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(D7a, bl_mn_idx_t) %>%
+    filter(all(n >= 3),
+           length(unique(D1)) == 5) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
+    geom_line() +
+    facet_wrap(~D7a) +
+  labs(x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D1 (anxiety)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
+ggsave("Plots/paper/lineplot_D1_gen_measures_D7a.png", width = 12, height = 12)
+
+## -----------
+
+# Plot: D2 vs German restriction index vs D7a
+micro_restr %>% select(D2, bl_mn_idx_t, D7a) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, D7a, D2) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(D7a, bl_mn_idx_t) %>%
+    filter(all(n >= 3),
+           length(unique(D2)) == 5) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
+    geom_line() +
+    facet_wrap(~D7a) +
+  labs(x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D2 (depression)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
+ggsave("Plots/paper/lineplot_D2_gen_measures_D7a.png", width = 12, height = 12)
 
 micro_restr %>% select(D1, bl_mn_idx_t) %>% ungroup() %>%
     group_by(bl_mn_idx_t, D1) %>%
