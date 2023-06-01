@@ -595,17 +595,7 @@ micro_restr <- readRDS(file = "data/protected_data/micro_restr.RDS")
 # Read gernab restriction data
 bl_massnahmen_index_tag <- readRDS(file = "data/protected_data/bl_massnahmen_index_tag.RDS")
 
-  
 
-# Plot: German restriction index over time for Bavaria 
-ggplot(data = filter(bl_massnahmen_index_tag, bundesland == "Bayern"), 
-       mapping = aes(x = datum, y = bl_mn_idx_t)) +
-  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
-  geom_line()  +
-  labs(title = "German measures index over time for Bavaria",
-       x = "Date",
-       y = "Measures index federal states per day (in %)")
-ggsave(filename = "Plots/german_restrictions/measures_date_bavaria.png", width = 12, height = 9)
 
 # Plot: Observations D1 (anxiety) over time
 Obs_RecordedDate_D1_lineplot <- ggplot(data = table_Obs_D1_Date, mapping = aes(x = RecordedDate, y = count)) +
@@ -851,121 +841,176 @@ unique(bl_massnahmen_index_tag$bl_mn_idx_t_m03)
 
 ## -----------
 
+# # Plot: D1 vs German restriction index
+# D1_restr_boxplot <- ggplot(data = micro_restr %>% select(D1, bl_mn_idx_t) %>% drop_na(), 
+#        mapping = aes(x = D1, y = bl_mn_idx_t)) +
+#   geom_boxplot() +
+#   stat_summary(
+#     fun.data = stat_box_data_80, 
+#     geom = "text", 
+#     hjust = 0.5,
+#     vjust = 0.9
+#   ) +
+#   labs(title = "Relationship between D1 (anxiety) and the german general containment measures",
+#        x = "D1 (anxiety)",
+#        y = "General containment\nmeasures index") +
+#   theme(text = element_text(size = 15))
+# 
+# # Plot: D2 vs German restriction index
+# D2_restr_boxplot <- ggplot(data = micro_restr %>% select(D2, bl_mn_idx_t) %>% drop_na(), 
+#        mapping = aes(x = D2, y = bl_mn_idx_t)) +
+#   geom_boxplot() +
+#   stat_summary(
+#     fun.data = stat_box_data_80, 
+#     geom = "text", 
+#     hjust = 0.5,
+#     vjust = 0.9
+#   ) +
+#   labs(title = "Relationship between D2 (depression) and the german general containment measures",
+#        x = "D2 (depressed)",
+#        y = "General containment\nmeasures index") +
+#   theme(text = element_text(size = 15))
+# 
+# ggarrange(D1_restr_boxplot, D2_restr_boxplot, ncol = 1, nrow = 2,
+#           labels = c("A", "B", "C", "D"))
+# ggsave("Plots/paper/arranged_gen_measures_D1_D2.png", width = 12, height = 9)
+# 
+# micro_restr %>%
+#   group_by(D1) %>%
+#   summarise(n(),
+#             mean(bl_mn_idx_t),
+#             median(bl_mn_idx_t),
+#             quantile(bl_mn_idx_t, .25),
+#             quantile(bl_mn_idx_t, .75))
+# 
+# micro_restr %>%
+#   group_by(D2) %>%
+#   summarise(n(),
+#             mean(bl_mn_idx_t),
+#             median(bl_mn_idx_t),
+#             quantile(bl_mn_idx_t, .25),
+#             quantile(bl_mn_idx_t, .75))
+# 
+# ## -----------
+# 
+# # Plot: D1 vs German restriction index vs E4
+# D1_restr_E4_boxplot <- ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t) %>% drop_na(), 
+#        mapping = aes(x = D1, y = bl_mn_idx_t)) +
+#   stat_summary(
+#     fun.data = stat_box_data, 
+#     geom = "text", 
+#     hjust = 0.5,
+#     vjust = 0.9
+#   ) +
+#     geom_boxplot(aes(color = E4)) +
+#     labs(title = "Relationship between D1 (anxiety) and the german general containment measures per age group",
+#          x = "D1 (anxious)",
+#          y = "General containment measures index") + 
+#     scale_color_brewer(palette = "Blues", name = "E4 (age group)") +
+#   theme(text = element_text(size = 15)) +
+#   theme_gray()
+# 
+# # Plot: D2 vs German restriction index vs E4
+# D2_restr_E4_boxplot <- ggplot(data = micro_restr %>% select(D2, E4, bl_mn_idx_t) %>% drop_na(), 
+#        mapping = aes(x = D2, y = bl_mn_idx_t)) +
+#   stat_summary(
+#     fun.data = stat_box_data, 
+#     geom = "text", 
+#     hjust = 0.5,
+#     vjust = 0.9
+#   ) +
+#     geom_boxplot(aes(color = E4)) +
+#     labs(title = "Relationship between D2 (depression) and the german general containment measures per age group",
+#          x = "D2 (depressed)",
+#          y = "General containment measures index") + 
+#     scale_color_brewer(palette = "Blues", name = "E4 (age group)") +
+#   theme(text = element_text(size = 15)) +
+#   theme_gray()
+# 
+# ggarrange(D1_restr_E4_boxplot, D2_restr_E4_boxplot, ncol = 1, nrow = 2,
+#           labels = c("A", "B", "C", "D"), common.legend = TRUE, legend = "bottom",
+#           font.label=list(color="black",size=15))
+# ggsave("Plots/paper/arranged_gen_measures_D1_D2_E4.png", width = 12, height = 12)
+# 
+# micro_restr %>%
+#   group_by(D1, E4) %>%
+#   summarise(n(),
+#             mean(bl_mn_idx_t),
+#             median(bl_mn_idx_t),
+#             quantile(bl_mn_idx_t, .25),
+#             quantile(bl_mn_idx_t, .75))
+# 
+# micro_restr %>%
+#   group_by(D2, E4) %>%
+#   summarise(n(),
+#             mean(bl_mn_idx_t),
+#             median(bl_mn_idx_t),
+#             quantile(bl_mn_idx_t, .25),
+#             quantile(bl_mn_idx_t, .75))
+
+## -----------
+
 # Plot: D1 vs German restriction index
-D1_restr_boxplot <- ggplot(data = micro_restr %>% select(D1, bl_mn_idx_t) %>% drop_na(), 
-       mapping = aes(x = D1, y = bl_mn_idx_t)) +
-  geom_boxplot() +
-  stat_summary(
-    fun.data = stat_box_data_80, 
-    geom = "text", 
-    hjust = 0.5,
-    vjust = 0.9
-  ) +
-  labs(title = "Relationship between D1 (anxiety) and the german general containment measures",
-       x = "D1 (anxiety)",
-       y = "General containment\nmeasures index") +
-  theme(text = element_text(size = 15))
+D1_gen_restr_lineplot <- micro_restr %>% select(D1, bl_mn_idx_t) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, D1) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(bl_mn_idx_t) %>%
+    filter(all(n >= 10)) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
+    geom_line() +
+  labs(title = "Relative frequency of D1 (anxiety) categories across general containment measures index",
+       x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D1 (anxiety)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
 
 # Plot: D2 vs German restriction index
-D2_restr_boxplot <- ggplot(data = micro_restr %>% select(D2, bl_mn_idx_t) %>% drop_na(), 
-       mapping = aes(x = D2, y = bl_mn_idx_t)) +
-  geom_boxplot() +
-  stat_summary(
-    fun.data = stat_box_data_80, 
-    geom = "text", 
-    hjust = 0.5,
-    vjust = 0.9
-  ) +
-  labs(title = "Relationship between D2 (depression) and the german general containment measures",
-       x = "D2 (depressed)",
-       y = "General containment\nmeasures index") +
-  theme(text = element_text(size = 15))
+D2_gen_restr_lineplot <- micro_restr %>% select(D2, bl_mn_idx_t) %>% ungroup() %>%
+    group_by(bl_mn_idx_t, D2) %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(bl_mn_idx_t) %>%
+    filter(all(n >= 10)) %>%
+    ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
+    geom_line() +
+  labs(title = "Relative frequency of D2 (depression) categories across general containment measures index",
+       x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D2 (depression)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
 
-ggarrange(D1_restr_boxplot, D2_restr_boxplot, ncol = 1, nrow = 2,
+ggarrange(D1_gen_restr_lineplot, D2_gen_restr_lineplot, ncol = 1, nrow = 2,
           labels = c("A", "B", "C", "D"))
-ggsave("Plots/paper/arranged_gen_measures_D1_D2.png", width = 12, height = 9)
-
-micro_restr %>%
-  group_by(D1) %>%
-  summarise(n(),
-            mean(bl_mn_idx_t),
-            median(bl_mn_idx_t),
-            quantile(bl_mn_idx_t, .25),
-            quantile(bl_mn_idx_t, .75))
-
-micro_restr %>%
-  group_by(D2) %>%
-  summarise(n(),
-            mean(bl_mn_idx_t),
-            median(bl_mn_idx_t),
-            quantile(bl_mn_idx_t, .25),
-            quantile(bl_mn_idx_t, .75))
+ggsave("Plots/paper/arranged_D1_D2_gen_measures.png", width = 12, height = 12)
 
 ## -----------
 
 # Plot: D1 vs German restriction index vs E4
-D1_restr_E4_boxplot <- ggplot(data = micro_restr %>% select(D1, E4, bl_mn_idx_t) %>% drop_na(), 
-       mapping = aes(x = D1, y = bl_mn_idx_t)) +
-  stat_summary(
-    fun.data = stat_box_data, 
-    geom = "text", 
-    hjust = 0.5,
-    vjust = 0.9
-  ) +
-    geom_boxplot(aes(color = E4)) +
-    labs(title = "Relationship between D1 (anxiety) and the german general containment measures per age group",
-         x = "D1 (anxious)",
-         y = "General containment measures index") + 
-    scale_color_brewer(palette = "Blues", name = "E4 (age group)") +
-  theme(text = element_text(size = 15)) +
-  theme_gray()
-
-# Plot: D2 vs German restriction index vs E4
-D2_restr_E4_boxplot <- ggplot(data = micro_restr %>% select(D2, E4, bl_mn_idx_t) %>% drop_na(), 
-       mapping = aes(x = D2, y = bl_mn_idx_t)) +
-  stat_summary(
-    fun.data = stat_box_data, 
-    geom = "text", 
-    hjust = 0.5,
-    vjust = 0.9
-  ) +
-    geom_boxplot(aes(color = E4)) +
-    labs(title = "Relationship between D2 (depression) and the german general containment measures per age group",
-         x = "D2 (depressed)",
-         y = "General containment measures index") + 
-    scale_color_brewer(palette = "Blues", name = "E4 (age group)") +
-  theme(text = element_text(size = 15)) +
-  theme_gray()
-
-ggarrange(D1_restr_E4_boxplot, D2_restr_E4_boxplot, ncol = 1, nrow = 2,
-          labels = c("A", "B", "C", "D"), common.legend = TRUE, legend = "bottom",
-          font.label=list(color="black",size=15))
-ggsave("Plots/paper/arranged_gen_measures_D1_D2_E4.png", width = 12, height = 12)
-
-micro_restr %>%
-  group_by(D1, E4) %>%
-  summarise(n(),
-            mean(bl_mn_idx_t),
-            median(bl_mn_idx_t),
-            quantile(bl_mn_idx_t, .25),
-            quantile(bl_mn_idx_t, .75))
-
-micro_restr %>%
-  group_by(D2, E4) %>%
-  summarise(n(),
-            mean(bl_mn_idx_t),
-            median(bl_mn_idx_t),
-            quantile(bl_mn_idx_t, .25),
-            quantile(bl_mn_idx_t, .75))
-
-## -----------
-
-micro_restr %>% select(D1, bl_mn_idx_t) %>% ungroup() %>%
-    group_by(bl_mn_idx_t, D1) %>%
+micro_restr %>% select(D1, bl_mn_idx_t, E4) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, E4, D1) %>%
     summarise(n = n()) %>%
     mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(E4, bl_mn_idx_t) %>%
+    filter(all(n >= 5)) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
-    geom_line()
+    geom_line() +
+    facet_wrap(~E4) +
+  labs(title = "Relative frequency of D1 (anxiety) categories across general containment measures index",
+       x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D1 (anxiety)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
+
 
 micro_restr %>% select(D1, bl_mn_idx_t) %>% ungroup() %>%
     group_by(bl_mn_idx_t, D1) %>%
