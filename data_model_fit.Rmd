@@ -79,8 +79,10 @@ all.models[[2]] <- model_glm_restr_D2
 all.models[[2]]$coefficients <- exp(all.models[[2]]$coefficients)
 
 # transform = NULL because coefficients are already exp() and x-axis should not be log-transformed
-plot_models(all.models, m.labels = c("anxious (D1)", "depressed (D2)"), transform = NULL)
-ggsave("Plots/models/model_glm_restr_D1_D2.png", width = 12, height = 9)
+plot_models(all.models, m.labels = c("anxious (D1)", "depressed (D2)"), transform = NULL, prefix.labels = "varname", grid.breaks = c(0,1,2,3,4,5)) +
+  theme(text = element_text(size = 15))
+ggsave("Plots/models/model_glm_restr_D1_D2.png", width = 12, height = 12)
+ggsave("Plots/paper/model_glm_restr_D1_D2.png", width = 14, height = 14)
 
 ## LOG-TRANSFORMATION
 

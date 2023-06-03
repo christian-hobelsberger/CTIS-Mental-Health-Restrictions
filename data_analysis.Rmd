@@ -961,6 +961,7 @@ D1_gen_restr_lineplot <- micro_restr %>% select(D1, bl_mn_idx_t) %>% ungroup() %
     filter(all(n >= 10)) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
     geom_line() +
+  geom_point(size = 0.75) +
   labs(title = "Relative frequency of D1 (anxiety) categories across general containment measures index",
        x = "General containment measures index",
        y = "Relative frequency",
@@ -979,6 +980,7 @@ D2_gen_restr_lineplot <- micro_restr %>% select(D2, bl_mn_idx_t) %>% ungroup() %
     filter(all(n >= 10)) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
     geom_line() +
+  geom_point(size = 0.75) +
   labs(title = "Relative frequency of D2 (depression) categories across general containment measures index",
        x = "General containment measures index",
        y = "Relative frequency",
@@ -1004,6 +1006,7 @@ micro_restr %>% select(D1, bl_mn_idx_t, E4) %>% ungroup() %>%
            length(unique(D1)) == 5) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
     geom_line() +
+  geom_point(size = 0.75) +
     facet_wrap(~E4) +
   labs(x = "General containment measures index",
        y = "Relative frequency",
@@ -1026,6 +1029,7 @@ micro_restr %>% select(D2, bl_mn_idx_t, E4) %>% ungroup() %>%
            length(unique(D2)) == 5) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
     geom_line() +
+  geom_point(size = 0.75) +
     facet_wrap(~E4) +
   labs(x = "General containment measures index",
        y = "Relative frequency",
@@ -1060,6 +1064,7 @@ micro_restr %>% select(D1, bl_mn_idx_t, E8) %>% ungroup() %>%
            length(unique(D1)) == 5) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
     geom_line() +
+  geom_point(size = 0.75) +
     facet_wrap(~E8) +
   labs(x = "General containment measures index",
        y = "Relative frequency",
@@ -1082,6 +1087,7 @@ micro_restr %>% select(D2, bl_mn_idx_t, E8) %>% ungroup() %>%
            length(unique(D2)) == 5) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
     geom_line() +
+  geom_point(size = 0.75) +
     facet_wrap(~E8) +
   labs(x = "General containment measures index",
        y = "Relative frequency",
@@ -1105,6 +1111,7 @@ micro_restr %>% select(D1, bl_mn_idx_t, E3) %>% ungroup() %>%
            length(unique(D1)) == 5) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
     geom_line() +
+  geom_point(size = 0.75) +
     facet_wrap(~E3) +
   labs(x = "General containment measures index",
        y = "Relative frequency",
@@ -1127,6 +1134,7 @@ micro_restr %>% select(D2, bl_mn_idx_t, E3) %>% ungroup() %>%
            length(unique(D2)) == 5) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
     geom_line() +
+  geom_point(size = 0.75) +
     facet_wrap(~E3) +
   labs(x = "General containment measures index",
        y = "Relative frequency",
@@ -1150,6 +1158,7 @@ micro_restr %>% select(D1, bl_mn_idx_t, E2) %>% ungroup() %>%
            length(unique(D1)) == 5) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
     geom_line() +
+  geom_point(size = 0.75) +
     facet_wrap(~E2) +
   labs(x = "General containment measures index",
        y = "Relative frequency",
@@ -1172,6 +1181,7 @@ micro_restr %>% select(D2, bl_mn_idx_t, E2) %>% ungroup() %>%
            length(unique(D2)) == 5) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
     geom_line() +
+  geom_point(size = 0.75) +
     facet_wrap(~E2) +
   labs(x = "General containment measures index",
        y = "Relative frequency",
@@ -1194,6 +1204,7 @@ micro_restr %>% select(D1, bl_mn_idx_t, D7a) %>% ungroup() %>%
            length(unique(D1)) == 5) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D1)) +
     geom_line() +
+  geom_point(size = 0.75) +
     facet_wrap(~D7a) +
   labs(x = "General containment measures index",
        y = "Relative frequency",
@@ -1216,6 +1227,7 @@ micro_restr %>% select(D2, bl_mn_idx_t, D7a) %>% ungroup() %>%
            length(unique(D2)) == 5) %>%
     ggplot(aes(x = bl_mn_idx_t, y = perc, color = D2)) +
     geom_line() +
+  geom_point(size = 0.75) +
     facet_wrap(~D7a) +
   labs(x = "General containment measures index",
        y = "Relative frequency",
