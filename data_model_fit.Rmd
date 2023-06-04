@@ -80,7 +80,8 @@ all.models[[2]]$coefficients <- exp(all.models[[2]]$coefficients)
 
 # transform = NULL because coefficients are already exp() and x-axis should not be log-transformed
 plot_models(all.models, m.labels = c("anxious (D1)", "depressed (D2)"), transform = NULL, prefix.labels = "varname", grid.breaks = c(0,1,2,3,4,5)) +
-  theme(text = element_text(size = 15))
+  theme(text = element_text(size = 15)) +
+  geom_hline(yintercept = 1, linetype = "dashed", alpha = .375)
 ggsave("Plots/models/model_glm_restr_D1_D2.png", width = 12, height = 12)
 ggsave("Plots/paper/model_glm_restr_D1_D2.png", width = 14, height = 14)
 
