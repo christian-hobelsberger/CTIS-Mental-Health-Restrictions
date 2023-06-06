@@ -1013,7 +1013,7 @@ D2_gen_restr_lineplot <- micro_restr %>% select(D2, bl_mn_idx_t) %>% ungroup() %
 ggarrange(D1_gen_restr_lineplot, D2_gen_restr_lineplot, ncol = 1, nrow = 2,
           labels = c("A", "B", "C", "D"), common.legend = TRUE, legend = "bottom",
           font.label=list(color="black",size=15))
-ggsave("Plots/paper/arranged_D1_D2_gen_measures.png", width = 12, height = 12)
+ggsave("Plots/paper/arranged_D1_D2_gen_measures.png", width = 13, height = 13)
 
 ## -----------
 
@@ -1047,7 +1047,8 @@ micro_restr %>% select(D1, bl_mn_idx_t, E4) %>% ungroup() %>%
        y = "Relative frequency",
        color = "D1 (anxiety)") +
   theme(text = element_text(size = 15),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  guides(color=guide_legend(nrow=2,byrow=TRUE))
 ggsave("Plots/paper/lineplot_D1_gen_measures_E4.png", width = 12, height = 12)
 
 ## -----------
@@ -1082,7 +1083,8 @@ micro_restr %>% select(D2, bl_mn_idx_t, E4) %>% ungroup() %>%
        y = "Relative frequency",
        color = "D2 (depression)") +
   theme(text = element_text(size = 15),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  guides(color=guide_legend(nrow=2,byrow=TRUE))
 ggsave("Plots/paper/lineplot_D2_gen_measures_E4.png", width = 12, height = 12)
 
 micro_restr %>% select(D2, bl_mn_idx_t, E4) %>% ungroup() %>%
@@ -1129,7 +1131,8 @@ micro_restr %>% select(D1, bl_mn_idx_t, E8) %>% ungroup() %>%
        y = "Relative frequency",
        color = "D1 (anxiety)") +
   theme(text = element_text(size = 15),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  guides(color=guide_legend(nrow=2,byrow=TRUE))
 ggsave("Plots/paper/lineplot_D1_gen_measures_E8.png", width = 12, height = 12)
 
 ## -----------
@@ -1164,7 +1167,8 @@ micro_restr %>% select(D2, bl_mn_idx_t, E8) %>% ungroup() %>%
        y = "Relative frequency",
        color = "D2 (depression)") +
   theme(text = element_text(size = 15),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  guides(color=guide_legend(nrow=2,byrow=TRUE))
 ggsave("Plots/paper/lineplot_D2_gen_measures_E8.png", width = 12, height = 12)
 
 
@@ -1200,7 +1204,8 @@ micro_restr %>% select(D1, bl_mn_idx_t, E3) %>% ungroup() %>%
        y = "Relative frequency",
        color = "D1 (anxiety)") +
   theme(text = element_text(size = 15),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  guides(color=guide_legend(nrow=2,byrow=TRUE))
   ggsave("Plots/paper/lineplot_D1_gen_measures_E3.png", width = 12, height = 12)
 
 ## -----------
@@ -1235,7 +1240,8 @@ micro_restr %>% select(D2, bl_mn_idx_t, E3) %>% ungroup() %>%
        y = "Relative frequency",
        color = "D2 (depression)") +
   theme(text = element_text(size = 15),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  guides(color=guide_legend(nrow=2,byrow=TRUE))
 ggsave("Plots/paper/lineplot_D2_gen_measures_E3.png", width = 12, height = 12)
 
 
@@ -1271,7 +1277,8 @@ micro_restr %>% select(D1, bl_mn_idx_t, E2) %>% ungroup() %>%
        y = "Relative frequency",
        color = "D1 (anxiety)") +
   theme(text = element_text(size = 15),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  guides(color=guide_legend(nrow=2,byrow=TRUE))
 ggsave("Plots/paper/lineplot_D1_gen_measures_E2.png", width = 12, height = 12)
 
 ## -----------
@@ -1306,7 +1313,8 @@ micro_restr %>% select(D2, bl_mn_idx_t, E2) %>% ungroup() %>%
        y = "Relative frequency",
        color = "D2 (depression)") +
   theme(text = element_text(size = 15),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  guides(color=guide_legend(nrow=2,byrow=TRUE))
 ggsave("Plots/paper/lineplot_D2_gen_measures_E2.png", width = 12, height = 12)
 
 ## -----------
@@ -1341,7 +1349,8 @@ micro_restr %>% select(D1, bl_mn_idx_t, D7a) %>% ungroup() %>%
        y = "Relative frequency",
        color = "D1 (anxiety)") +
   theme(text = element_text(size = 15),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  guides(color=guide_legend(nrow=2,byrow=TRUE))
 ggsave("Plots/paper/lineplot_D1_gen_measures_D7a.png", width = 12, height = 12)
 
 ## -----------
@@ -1376,7 +1385,8 @@ micro_restr %>% select(D2, bl_mn_idx_t, D7a) %>% ungroup() %>%
        y = "Relative frequency",
        color = "D2 (depression)") +
   theme(text = element_text(size = 15),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  guides(color=guide_legend(nrow=2,byrow=TRUE))
 ggsave("Plots/paper/lineplot_D2_gen_measures_D7a.png", width = 12, height = 12)
 
 # Other:
