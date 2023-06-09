@@ -35,20 +35,30 @@ micro_restr$B0 <- relevel(micro_restr$B0, ref = "No")
 micro_restr$G1 <- relevel(micro_restr$G1, ref = "A little")
 micro_restr$D7a <- relevel(micro_restr$D7a, ref = "No")
 
+# Rename indicies
+micro_restr <- micro_restr %>%
+  rename(General_containment_measures_index = bl_mn_idx_t,
+         Secondary_schools_measures_index = bl_mn_idx_t_m02a,
+         Elementary_schools_measures_index = bl_mn_idx_t_m02b,
+         Daycare_centers_measures_index = bl_mn_idx_t_m03,
+         Mask_obligation_index = bl_mn_idx_t_m16)
+
 # Fit model
 
 # E4 = Age, E3 = Gender, E8 = Education, E2 = Where do you live?, E5 = Number people slept in same place
 # E7a = Number rooms used for sleeping, D7a = Paid work
 # NOT INCLUDED: D10 = Field of business, B0 = Had Covid?, G1 = Worried catching Covid?, J1 = Number children in houshold
 
-model_glm_restr_D1 <- glm(anxious ~ bl_mn_idx_t + bl_mn_idx_t_m02a + bl_mn_idx_t_m02b + bl_mn_idx_t_m03 + 
-                            bl_mn_idx_t_m16 + E4 + E3 + E8 + E2 + E5 + D7a + E7a,
+model_glm_restr_D1 <- glm(anxious ~ General_containment_measures_index + Secondary_schools_measures_index + 
+                            Elementary_schools_measures_index + Daycare_centers_measures_index + 
+                            Mask_obligation_index + E4 + E3 + E8 + E2 + E5 + D7a + E7a,
                           family=binomial(link='logit'), data=micro_restr)
 summary(model_glm_restr_D1)
 exp(model_glm_restr_D1$coefficients)
 
-model_glm_restr_D2 <- glm(depressed ~ bl_mn_idx_t + bl_mn_idx_t_m02a + bl_mn_idx_t_m02b + bl_mn_idx_t_m03 + 
-                            bl_mn_idx_t_m16 + E4 + E3 + E8 + E2 + E5 + D7a + E7a,
+model_glm_restr_D2 <- glm(depressed ~ General_containment_measures_index + Secondary_schools_measures_index + 
+                            Elementary_schools_measures_index + Daycare_centers_measures_index + 
+                            Mask_obligation_index + E4 + E3 + E8 + E2 + E5 + D7a + E7a,
                           family=binomial(link='logit'), data=micro_restr)
 summary(model_glm_restr_D2)
 exp(model_glm_restr_D2$coefficients)
