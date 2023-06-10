@@ -787,7 +787,7 @@ measures_daycare_date <- ggplot(data = bl_massnahmen_index_tag,
                                 mapping = aes(x = datum, y = bl_mn_idx_t_m03, color = bundesland)) +
   geom_line(aes(alpha = alpha_values)) +
   geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
-  labs(title = "German daycare centers measures index\nover time per federal states",
+  labs(title = "German daycare center measures index\nover time per federal states",
        x = "Date",
        y = "Daycare centers measures\nindex",
        color = "Federal state") +
@@ -799,7 +799,7 @@ measures_sec_schools_date <- ggplot(data = bl_massnahmen_index_tag,
                                     mapping = aes(x = datum, y = bl_mn_idx_t_m02a, color = bundesland)) +
   geom_line(aes(alpha = alpha_values)) +
   geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
-  labs(title = "German secondary schools measures index\nover time per federal states",
+  labs(title = "German secondary school measures index\nover time per federal states",
        x = "Date",
        y = "Secondary schools measures\nindex",
        color = "Federal state") +
@@ -811,7 +811,7 @@ measures_elem_schools_date <- ggplot(data = bl_massnahmen_index_tag,
                                      mapping = aes(x = datum, y = bl_mn_idx_t_m02b, color = bundesland)) +
   geom_line(aes(alpha = alpha_values)) +
   geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
-  labs(title = "Elementary schools measures index\nover time per federal states",
+  labs(title = "Elementary school measures index\nover time per federal states",
        x = "Date",
        y = "German elementary schools measures\nindex",
        color = "Federal state") +
