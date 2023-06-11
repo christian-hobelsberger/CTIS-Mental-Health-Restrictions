@@ -37,11 +37,18 @@ micro_restr$D7a <- relevel(micro_restr$D7a, ref = "No")
 
 # Rename indicies
 micro_restr <- micro_restr %>%
-  rename(General_containment_measures_index = bl_mn_idx_t,
-         Secondary_schools_measures_index = bl_mn_idx_t_m02a,
-         Elementary_schools_measures_index = bl_mn_idx_t_m02b,
-         Daycare_centers_measures_index = bl_mn_idx_t_m03,
-         Mask_obligation_index = bl_mn_idx_t_m16)
+  mutate(bl_mn_idx_t = bl_mn_idx_t / 100,
+         bl_mn_idx_t_m02a = bl_mn_idx_t_m02a / 100,
+         bl_mn_idx_t_m02b = bl_mn_idx_t_m02b / 100,
+         bl_mn_idx_t_m03 = bl_mn_idx_t_m03 / 100,
+         bl_mn_idx_t_m16 = bl_mn_idx_t_m16 / 100) %>%
+  select(anxious, depressed, bl_mn_idx_t, bl_mn_idx_t_m02a, bl_mn_idx_t_m02b, bl_mn_idx_t_m03, bl_mn_idx_t_m16,
+         E4, E3, E8, E2, E5, D7a, E7a) %>%
+  rename("General_containment_measures_index/100" = bl_mn_idx_t,
+         "Secondary_school_measures_index/100" = bl_mn_idx_t_m02a,
+         "Elementary_school_measures_index/100" = bl_mn_idx_t_m02b,
+         "Daycare_center_measures_index/100" = bl_mn_idx_t_m03,
+         "Mask_obligation_index/100" = bl_mn_idx_t_m16)
 
 # Fit model
 
@@ -49,17 +56,11 @@ micro_restr <- micro_restr %>%
 # E7a = Number rooms used for sleeping, D7a = Paid work
 # NOT INCLUDED: D10 = Field of business, B0 = Had Covid?, G1 = Worried catching Covid?, J1 = Number children in houshold
 
-model_glm_restr_D1 <- glm(anxious ~ General_containment_measures_index + Secondary_schools_measures_index + 
-                            Elementary_schools_measures_index + Daycare_centers_measures_index + 
-                            Mask_obligation_index + E4 + E3 + E8 + E2 + E5 + D7a + E7a,
-                          family=binomial(link='logit'), data=micro_restr)
+model_glm_restr_D1 <- glm(anxious ~ ., family=binomial(link='logit'), data=select(micro_restr, -depressed))
 summary(model_glm_restr_D1)
 exp(model_glm_restr_D1$coefficients)
 
-model_glm_restr_D2 <- glm(depressed ~ General_containment_measures_index + Secondary_schools_measures_index + 
-                            Elementary_schools_measures_index + Daycare_centers_measures_index + 
-                            Mask_obligation_index + E4 + E3 + E8 + E2 + E5 + D7a + E7a,
-                          family=binomial(link='logit'), data=micro_restr)
+model_glm_restr_D2 <- glm(depressed ~ ., family=binomial(link='logit'), data=select(micro_restr, -anxious))
 summary(model_glm_restr_D2)
 exp(model_glm_restr_D2$coefficients)
 
@@ -91,7 +92,8 @@ all.models[[2]]$coefficients <- exp(all.models[[2]]$coefficients)
 # transform = NULL because coefficients are already exp() and x-axis should not be log-transformed
 plot_models(all.models, m.labels = c("anxious (D1)", "depressed (D2)"), transform = NULL, prefix.labels = "varname", grid.breaks = c(0,1,2,3,4,5)) +
   theme(text = element_text(size = 15)) +
-  geom_hline(yintercept = 1, linetype = "dashed", alpha = .375)
+  geom_hline(yintercept = 1, linetype = "dashed", alpha = .375) +
+  theme_bw()
 ggsave("Plots/models/model_glm_restr_D1_D2.png", width = 12, height = 12)
 ggsave("Plots/paper/model_glm_restr_D1_D2.png", width = 14, height = 14)
 
