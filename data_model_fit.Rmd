@@ -95,7 +95,7 @@ plot_models(all.models, m.labels = c("anxious (D1)", "depressed (D2)"), transfor
   geom_hline(yintercept = 1, linetype = "dashed", alpha = .375) +
   theme_bw()
 ggsave("Plots/models/model_glm_restr_D1_D2.png", width = 12, height = 12)
-ggsave("Plots/paper/model_glm_restr_D1_D2.png", width = 10, height = 14)
+ggsave("Plots/paper/model_glm_restr_D1_D2.png", width = 10, height = 11)
 
 ## LOG-TRANSFORMATION
 
