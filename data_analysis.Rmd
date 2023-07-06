@@ -1408,3 +1408,99 @@ micro_restr %>% select(D1, bl_mn_idx_t, E4) %>% ungroup() %>%
     facet_wrap(~E4)
 ```
 
+
+
+# Plots for presentation
+```{r}
+# Read in microdata
+CTIS_microdata <- readRDS(file = "data/protected_data/CTIS_microdata.RDS")
+# Read microdata with restriction data
+micro_restr <- readRDS(file = "data/protected_data/micro_restr.RDS")
+
+# Read gernab restriction data
+bl_massnahmen_index_tag <- readRDS(file = "data/protected_data/bl_massnahmen_index_tag.RDS")
+
+
+
+bl_massnahmen_index_tag$alpha_values <- ifelse(bl_massnahmen_index_tag$included_in_study, 1, 0.8)
+# Plot: German restriction index over time by federal state 
+ggplot(data = bl_massnahmen_index_tag, mapping = aes(x = datum, y = bl_mn_idx_t, color = bundesland)) +
+  geom_line(aes(alpha = alpha_values)) +
+  geom_vline(xintercept = c(as.Date("2022-06-25"), as.Date("2021-05-20")), linetype="dashed") +
+  labs(title = "German general containment measures index over time per federal states",
+       caption = "Data aggregated per day: Relevant observation period May 20, 2021 to June 25, 2022",
+       x = "Date",
+       y = "General containment measures index", 
+       color = "Federal state") +
+    scale_alpha_continuous(guide="none") +
+  theme(text = element_text(size = 15))
+ggsave(filename = "Plots/presentation/gen_measures_date.png", width = 12, height = 9)
+
+## -----------
+
+# Plot: Observations D1 (anxiety) over time
+Obs_RecordedDate_D1_lineplot <- ggplot(data = table_Obs_D1_Date, mapping = aes(x = RecordedDate, y = count)) +
+  geom_line() +
+  labs(title = "Number of observations D1 (anxiety) over time",
+       x = "Date",
+       y = "Number of daily observations") +
+  ylim(0, 2000) +
+  theme(text = element_text(size = 15)) 
+# Plot: Observations D2 (depression) over time
+Obs_RecordedDate_D2_lineplot <- ggplot(data = table_Obs_D2_Date, mapping = aes(x = RecordedDate, y = count)) +
+  geom_line() +
+  labs(title = "Number of observations D2 (depression) over time",
+       x = "Date",
+       y = "Number of daily observations") +
+  ylim(0, 2000) +
+  theme(text = element_text(size = 15)) 
+
+ggarrange(Obs_RecordedDate_D1_lineplot, Obs_RecordedDate_D2_lineplot, ncol = 1, nrow = 2,
+          labels = c("A", "B", "C", "D")) |>
+  annotate_figure(plot, top = text_grob("Observations of D1 (anxiety) and D2 (depression) over time", 
+               color = "black", face = "bold", size = 20)) |>
+  annotate_figure(plot, bottom = text_grob("Daily aggregated data: Observation period May 20, 2021 to June 25, 2022", 
+               color = "black", size = 12))
+ggsave("Plots/presentation/arranged_RecordedDate_D1_D2.png", width = 12, height = 9)
+
+## -----------
+
+# Plot: D2 vs German restriction index
+gen_restr_count_D2 <- micro_restr %>% select(D2, bl_mn_idx_t) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, D2) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(bl_mn_idx_t) %>%
+    filter(all(n >= 10)) %>%
+    summarise(n = sum(n))
+
+D2_gen_restr_lineplot <- micro_restr %>% select(D2, bl_mn_idx_t) %>% ungroup() %>%
+    mutate(bl_mn_idx_t = round(bl_mn_idx_t)) %>%
+    group_by(bl_mn_idx_t, D2) %>%
+    summarise(n = n()) %>%
+    mutate(perc = n/sum(n)) %>%
+    ungroup() %>%
+    group_by(bl_mn_idx_t) %>%
+    filter(all(n >= 10)) %>%
+    ggplot(aes(x = bl_mn_idx_t)) +
+    geom_line(aes(color = D2, y = perc)) +
+  geom_point(size = 0.75, aes(color = D2, y = perc)) +
+  geom_rug(data = gen_restr_count_D2, sides="b", mapping = aes(linewidth = n)) +
+  labs(title = "Relative frequency of D2 (depression) categories across general containment measures index",
+       x = "General containment measures index",
+       y = "Relative frequency",
+       color = "D2 (depression)") +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom")
+
+ggarrange(D1_gen_restr_lineplot, D2_gen_restr_lineplot, ncol = 1, nrow = 2,
+          labels = c("A", "B", "C", "D"), common.legend = TRUE, legend = "bottom",
+          font.label=list(color="black",size=15)) |>
+  annotate_figure(plot, top = text_grob("Relative frequency of mental health categories across general containment measures index", 
+               color = "black", face = "bold", size = 20)) |>
+  annotate_figure(plot, bottom = text_grob("Data aggregated per day: Observation period May 20, 2021 to June 25, 2022; General containment measuresindex is rounded to the nearest integer\nObservations with at least 10 responses for each mental health category across index scores.", 
+               color = "black", size = 12))
+ggsave("Plots/presentation/arranged_D1_D2_gen_measures.png", width = 13, height = 13)
+```
